@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E21B0DC7-8A09-4099-B3D6-80D3D1929C4F}</ProjectGuid>
+    <RootNamespace>Moshine.Api.Location.Shared</RootNamespace>
+  </PropertyGroup>
+  <Import Project="Moshine.Api.Location.Shared.projitems" Label="Shared" />
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.SharedProject.targets" />
+</Project>

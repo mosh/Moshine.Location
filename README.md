@@ -1,2 +1,3 @@
 # Moshine.Location
-Location library
+
+Cross platform location library for Elements

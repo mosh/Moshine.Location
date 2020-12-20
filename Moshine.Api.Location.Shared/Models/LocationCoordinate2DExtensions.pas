@@ -1,4 +1,4 @@
-﻿namespace Moshine.Api.Locationm.Models;
+﻿namespace Moshine.Api.Location.Models;
 
 uses
   RemObjects.Elements.RTL;

@@ -2,6 +2,7 @@
 
 
 uses
+
   Moshine.Api.Location.Models;
 
 type
@@ -37,29 +38,16 @@ type
       lat1 := ToRadians(lat1);
       lat2 := ToRadians(lat2);
 
-      var a := Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
-      var c := 2 * Math.Asin(Math.Sqrt(a));
-      exit r * 2 * Math.Asin(Math.Sqrt(a));
-
+      var a := RemObjects.Elements.RTL.Math.Sin(dLat / 2)
+        * RemObjects.Elements.RTL.Math.Sin(dLat / 2)
+        + RemObjects.Elements.RTL.Math.Sin(dLon / 2)
+        * RemObjects.Elements.RTL.Math.Sin(dLon / 2)
+        * RemObjects.Elements.RTL.Math.Cos(lat1)
+        * RemObjects.Elements.RTL.Math.Cos(lat2);
+      var c := 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
+      exit r * 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
 
     end;
   end;
 
-/*
- public static double calculate(double lat1, double lon1, double lat2, double lon2) {
-    var R = 6372.8; // In kilometers
-    var dLat = toRadians(lat2 - lat1);
-    var dLon = toRadians(lon2 - lon1);
-    lat1 = toRadians(lat1);
-    lat2 = toRadians(lat2);
-
-    var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
-    var c = 2 * Math.Asin(Math.Sqrt(a));
-    return R * 2 * Math.Asin(Math.Sqrt(a));
-  }
-
-  public static double toRadians(double angle) {
-    return Math.PI * angle / 180.0;
-  }
-*/
 end.

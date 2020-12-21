@@ -10,5 +10,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Models\LocationCoordinate2D.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LocationCoordinate2DExtensions.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Haversine.pas" />
   </ItemGroup>
 </Project>

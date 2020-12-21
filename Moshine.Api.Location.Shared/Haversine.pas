@@ -1,0 +1,65 @@
+﻿namespace Moshine.Api.Location;
+
+
+uses
+  Moshine.Api.Location.Models;
+
+type
+
+  //
+  // Reference
+  // https://en.wikipedia.org/wiki/Great-circle_distance
+  // https://en.wikipedia.org/wiki/Haversine_formula
+  // http://rosettacode.org/wiki/Haversine_formula#C.23
+  //
+
+  Haversine = public class
+  private
+
+    class method ToRadians(angle:Double):Double;
+    begin
+    {$IF TOFFEE}
+    exit (RemObjects.Elements.RTL.Consts.PI * angle) / 180.0;
+    {$ELSE}
+    // Net Core
+    exit (system.Math.PI * angle) / 180.0;
+    {$ENDIF}
+
+    end;
+
+  public
+    class method Calculate(lat1:Double; lon1:Double; lat2:Double; lon2:Double):Double;
+    begin
+      var r := 6372.8; // In kilometres
+
+      var dLat := ToRadians(lat2 - lat1);
+      var dLon := ToRadians(lon2 - lon1);
+      lat1 := ToRadians(lat1);
+      lat2 := ToRadians(lat2);
+
+      var a := Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+      var c := 2 * Math.Asin(Math.Sqrt(a));
+      exit r * 2 * Math.Asin(Math.Sqrt(a));
+
+
+    end;
+  end;
+
+/*
+ public static double calculate(double lat1, double lon1, double lat2, double lon2) {
+    var R = 6372.8; // In kilometers
+    var dLat = toRadians(lat2 - lat1);
+    var dLon = toRadians(lon2 - lon1);
+    lat1 = toRadians(lat1);
+    lat2 = toRadians(lat2);
+
+    var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+    var c = 2 * Math.Asin(Math.Sqrt(a));
+    return R * 2 * Math.Asin(Math.Sqrt(a));
+  }
+
+  public static double toRadians(double angle) {
+    return Math.PI * angle / 180.0;
+  }
+*/
+end.

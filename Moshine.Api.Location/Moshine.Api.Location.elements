@@ -1,46 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-    <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}</ProjectGuid>
+    <OutputType>StaticLibrary</OutputType>
     <RootNamespace>Moshine.Api.Location</RootNamespace>
-    <ProjectGuid>{71AF424B-1556-496B-9896-C0174CE0A101}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AssemblyName>Moshine.Api.Location</AssemblyName>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFramework>.NETStandard</TargetFramework>
-    <Mode>Echoes</Mode>
     <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Optimize>False</Optimize>
     <OutputPath>.\Bin\Debug</OutputPath>
-    <ConditionalDefines>DEBUG;TRACE;</ConditionalDefines>
-    <GeneratePDB>True</GeneratePDB>
-    <GenerateMDB>True</GenerateMDB>
     <EnableAsserts>True</EnableAsserts>
-    <CpuType>anycpu</CpuType>
-    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <Optimize>False</Optimize>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <ConditionalDefines>DEBUG;TRACE;</ConditionalDefines>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>.\Bin\Release</OutputPath>
-    <CpuType>anycpu</CpuType>
-    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Echoes.Full' ">
+    <Mode>Echoes</Mode>
+    <TargetFramework>.NETFramework</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Echoes.Core' ">
+    <Mode>Echoes</Mode>
+    <TargetFramework>.NET5.0</TargetFramework>
+    <ConditionalDefines>NETCORE</ConditionalDefines>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Echoes.Standard' ">
+    <Mode>Echoes</Mode>
+    <TargetFramework>.NETStandard2.0</TargetFramework>
+    <ConditionalDefines>NETSTANDARD</ConditionalDefines>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.Linux' ">
+    <Mode>Island</Mode>
+    <SubMode>Linux</SubMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.macOS' ">
+    <Mode>Island</Mode>
+    <SubMode>Darwin</SubMode>
+    <SDK>macOS</SDK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.iOS' ">
+    <Mode>Island</Mode>
+    <SubMode>Darwin</SubMode>
+    <SDK>iOS</SDK>
+    <SupportMacCatalyst>True</SupportMacCatalyst>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.tvOS' ">
+    <Mode>Island</Mode>
+    <SubMode>Darwin</SubMode>
+    <SDK>tvOS</SDK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.watchOS' ">
+    <Mode>Island</Mode>
+    <SubMode>Darwin</SubMode>
+    <SDK>watchOS</SDK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Island.WebAssembly' ">
+    <Mode>Island</Mode>
+    <SubMode>WebAssembly</SubMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Toffee.iOS' ">
+    <Mode>Toffee</Mode>
+    <SDK>iOS</SDK>
+    <SupportMacCatalyst>True</SupportMacCatalyst>
+    <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Toffee.macOS' ">
+    <Mode>Toffee</Mode>
+    <SDK>macOS</SDK>
+    <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Toffee.tvOS' ">
+    <Mode>Toffee</Mode>
+    <SDK>tvOS</SDK>
+    <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Target)' == 'Toffee.watchOS' ">
+    <Mode>Toffee</Mode>
+    <SDK>watchOS</SDK>
+    <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Echoes" />
-    <Reference Include="Elements" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.pas" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.pas" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-    <Compile Include="Properties\Settings.Designer.pas" />
+    <Reference Include="#" />
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
-  <Import Project="..\..\Moshine.Location\Moshine.Api.Location.Shared\Moshine.Api.Location.Shared.projitems" Label="Shared" />
 </Project>

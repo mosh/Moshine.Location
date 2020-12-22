@@ -3,9 +3,10 @@
   <PropertyGroup>
     <ProjectGuid>{9628DF9B-46EF-42E9-9E5B-5CEE2901E46A}</ProjectGuid>
     <OutputType>StaticLibrary</OutputType>
-    <RootNamespace>libMoshine.Api.Location</RootNamespace>
+    <RootNamespace>Moshine.Api.Location</RootNamespace>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+    <BinaryName>Moshine.Api.Location</BinaryName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>.\Bin\Debug</OutputPath>

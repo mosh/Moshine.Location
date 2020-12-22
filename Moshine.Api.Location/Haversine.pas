@@ -1,8 +1,6 @@
 ﻿namespace Moshine.Api.Location;
 
-
 uses
-
   Moshine.Api.Location.Models;
 
 type

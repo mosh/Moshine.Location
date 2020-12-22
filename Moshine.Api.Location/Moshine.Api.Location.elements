@@ -90,5 +90,34 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Haversine.pas" />
+    <Compile Include="Models\LocationCoordinate2DExtensions.pas" />
+    <Compile Include="Models\LocationCoordinate2D.pas" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.tvOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.macOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.iOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.watchOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.tvOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
+    <Reference Include="CoreLocation" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
 </Project>

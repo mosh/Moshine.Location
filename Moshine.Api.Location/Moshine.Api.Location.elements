@@ -27,12 +27,8 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Echoes">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Elements">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Echoes" />
+    <Reference Include="Elements" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.pas" />

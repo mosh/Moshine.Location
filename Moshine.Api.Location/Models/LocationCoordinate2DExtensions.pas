@@ -22,7 +22,7 @@ type
 
 
     // degrees to radians
-    class method Deg2rad(degrees:Double):Double;
+    class method Degrees2Radians(degrees:Double):Double;
     begin
       {$IFDEF ECHOES}
       exit System.Math.PI * degrees / 180.0;
@@ -34,7 +34,7 @@ type
     end;
 
     // radians to degrees
-    class method Rad2deg(radians:Double):Double;
+    class method Radians2Degrees(radians:Double):Double;
     begin
       {$IFDEF ECHOES}
       exit 180.0 * radians / System.Math.PI;
@@ -55,6 +55,7 @@ type
       var Bd := WGS84_b * Math.Sin(lat);
       exit Math.Sqrt((An*An + Bn*Bn) / (Ad*Ad + Bd*Bd));
     end;
+
   public
     // https://stackoverflow.com/questions/238260/how-to-calculate-the-bounding-box-for-a-given-lat-lng-location
     // 'halfSideInKm' is the half length of the bounding box you want in kilometers.
@@ -63,8 +64,8 @@ type
       // Bounding box surrounding the point at given coordinates,
       // assuming local approximation of Earth surface as a sphere
       // of radius given by WGS84
-      var lat := Deg2rad(self.Latitude);
-      var lon := Deg2rad(self.Longitude);
+      var lat := Degrees2Radians(self.Latitude);
+      var lon := Degrees2Radians(self.Longitude);
       var halfSide := 1000 * halfSideInKm;
 
       // Radius of Earth at given latitude
@@ -78,10 +79,48 @@ type
       var lonMax := lon + halfSide / pradius;
 
       exit new BoundingBox (
-          MinPoint := new LocationCoordinate2D ( Latitude := Rad2deg(latMin), Longitude := Rad2deg(lonMin) ),
-          MaxPoint := new LocationCoordinate2D ( Latitude := Rad2deg(latMax), Longitude := Rad2deg(lonMax) )
+          MinPoint := new LocationCoordinate2D ( Latitude := Radians2Degrees(latMin), Longitude := Radians2Degrees(lonMin) ),
+          MaxPoint := new LocationCoordinate2D ( Latitude := Radians2Degrees(latMax), Longitude := Radians2Degrees(lonMax) )
           );
     end;
+
+    // http://mathforum.org/library/drmath/view/55417.html
+    method BearingToLocation(destination:LocationCoordinate2D):Double;
+    begin
+      var atan2Left := Math.Sin(destination.Longitude-self.Longitude)*Math.Cos(destination.Latitude);
+      var atan2Right := Math.Cos(self.Latitude)*Math.Sin(destination.Latitude)-Math.Sin(self.Latitude)*Math.Cos(destination.Latitude)*Math.Cos(destination.Longitude-self.Longitude);
+      exit Math.Atan2(atan2Left, atan2Right) mod 2*RemObjects.Elements.RTL.Consts.PI;
+    end;
+
+
+    //
+    // Reference
+    // https://en.wikipedia.org/wiki/Great-circle_distance
+    // https://en.wikipedia.org/wiki/Haversine_formula
+    // http://rosettacode.org/wiki/Haversine_formula#C.23
+    //
+
+    method GreatCircleDistance(destination:LocationCoordinate2D):Double;
+    begin
+      var r := 6372.8; // In kilometres
+
+      var dLat := Degrees2Radians(destination.Latitude - self.Latitude);
+      var dLon := Degrees2Radians(destination.Longitude - self.Longitude);
+      var lat1 := Degrees2Radians(self.Latitude);
+      var lat2 := Degrees2Radians(destination.Latitude);
+
+      var a := RemObjects.Elements.RTL.Math.Sin(dLat / 2)
+        * RemObjects.Elements.RTL.Math.Sin(dLat / 2)
+        + RemObjects.Elements.RTL.Math.Sin(dLon / 2)
+        * RemObjects.Elements.RTL.Math.Sin(dLon / 2)
+        * RemObjects.Elements.RTL.Math.Cos(lat1)
+        * RemObjects.Elements.RTL.Math.Cos(lat2);
+      var c := 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
+      exit r * 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
+
+    end;
+
+
 
   end;
 

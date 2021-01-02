@@ -91,7 +91,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Haversine.pas" />
     <Compile Include="Models\LocationCoordinate2DExtensions.pas" />
     <Compile Include="Models\LocationCoordinate2D.pas" />
     <Compile Include="Convert.pas" />

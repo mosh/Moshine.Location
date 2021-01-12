@@ -1,6 +1,7 @@
-﻿namespace Moshine.Api.Location.Models;
+﻿namespace Moshine.Api.Location;
 
 uses
+  Moshine.Api.Location.Models,
   RemObjects.Elements.RTL;
 
 type
@@ -64,8 +65,8 @@ type
       // Bounding box surrounding the point at given coordinates,
       // assuming local approximation of Earth surface as a sphere
       // of radius given by WGS84
-      var lat := Degrees2Radians(self.Latitude);
-      var lon := Degrees2Radians(self.Longitude);
+      var lat := Degrees2Radians(self.latitude as Double);
+      var lon := Degrees2Radians(self.longitude as Double);
       var halfSide := 1000 * halfSideInKm;
 
       // Radius of Earth at given latitude
@@ -79,16 +80,17 @@ type
       var lonMax := lon + halfSide / pradius;
 
       exit new BoundingBox (
-          MinPoint := new LocationCoordinate2D ( Latitude := Radians2Degrees(latMin), Longitude := Radians2Degrees(lonMin) ),
-          MaxPoint := new LocationCoordinate2D ( Latitude := Radians2Degrees(latMax), Longitude := Radians2Degrees(lonMax) )
+          MinPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMin) as Latitude, longitude := Radians2Degrees(lonMin) as Longitude ),
+          MaxPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMax) as Latitude, longitude := Radians2Degrees(lonMax) as Longitude )
           );
     end;
 
     // http://mathforum.org/library/drmath/view/55417.html
     method BearingToLocation(destination:LocationCoordinate2D):Double;
     begin
-      var atan2Left := Math.Sin(destination.Longitude-self.Longitude)*Math.Cos(destination.Latitude);
-      var atan2Right := Math.Cos(self.Latitude)*Math.Sin(destination.Latitude)-Math.Sin(self.Latitude)*Math.Cos(destination.Latitude)*Math.Cos(destination.Longitude-self.Longitude);
+      var atan2Left := Math.Sin(destination.longitude as Double - self.longitude as Double)*Math.Cos(destination.latitude as Double);
+      var atan2Right := Math.Cos(self.latitude as Double)*Math.Sin(destination.latitude as Double)-Math.Sin(self.latitude as Double)
+        * Math.Cos(destination.latitude as Double) * Math.Cos(destination.longitude as Double - self.longitude as Double);
       exit Math.Atan2(atan2Left, atan2Right) mod 2*RemObjects.Elements.RTL.Consts.PI;
     end;
 
@@ -104,10 +106,10 @@ type
     begin
       var r := 6372.8; // In kilometres
 
-      var dLat := Degrees2Radians(destination.Latitude - self.Latitude);
-      var dLon := Degrees2Radians(destination.Longitude - self.Longitude);
-      var lat1 := Degrees2Radians(self.Latitude);
-      var lat2 := Degrees2Radians(destination.Latitude);
+      var dLat := Degrees2Radians(destination.latitude as Double - self.latitude as Double);
+      var dLon := Degrees2Radians(destination.longitude as Double - self.longitude as Double);
+      var lat1 := Degrees2Radians(self.latitude as Double);
+      var lat2 := Degrees2Radians(destination.latitude as Double);
 
       var a := RemObjects.Elements.RTL.Math.Sin(dLat / 2)
         * RemObjects.Elements.RTL.Math.Sin(dLat / 2)

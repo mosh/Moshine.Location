@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Moshine.Api.Location", "Moshine.Api.Location\Moshine.Api.Location.elements", "{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}"
 EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Moshine.Services.Location", "Moshine.Services.Location\Moshine.Services.Location.elements", "{2FD9A150-1132-4BD4-913A-9637AD795B93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -13,6 +15,10 @@ Global
 		{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{2FD9A150-1132-4BD4-913A-9637AD795B93}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{2FD9A150-1132-4BD4-913A-9637AD795B93}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{2FD9A150-1132-4BD4-913A-9637AD795B93}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{2FD9A150-1132-4BD4-913A-9637AD795B93}.Release|AnyCPU.Build.0 = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,8 @@
 ﻿namespace Moshine.Services.Location;
 
+{$IFDEF COCOA}
+{$IFDEF IOS}
+
 uses
   CoreLocation,
   Moshine.Services.Location.Models,
@@ -281,5 +284,8 @@ type
 
 
   end;
+
+{$ENDIF}
+{$ENDIF}
 
 end.

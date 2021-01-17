@@ -77,9 +77,21 @@
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.watchOS'">
     <Reference Include="CoreLocation" />
+    <ProjectReference Include="Moshine.Api.Location">
+      <HintPath>..\Moshine.Api.Location\Bin\Debug\iOS\arm64\Moshine.Api.Location.a</HintPath>
+      <Project>{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}</Project>
+      <ProjectFile>..\Moshine.Api.Location\Moshine.Api.Location.elements</ProjectFile>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
     <Reference Include="CoreLocation" />
+    <ProjectReference Include="Moshine.Api.Location">
+      <HintPath>..\Moshine.Api.Location\Bin\Debug\iOS\arm64\Moshine.Api.Location.a</HintPath>
+      <Project>{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}</Project>
+      <ProjectFile>..\Moshine.Api.Location\Moshine.Api.Location.elements</ProjectFile>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
 </Project>

@@ -80,8 +80,8 @@ type
       var lonMax := lon + halfSide / pradius;
 
       exit new BoundingBox (
-          MinPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMin) as Latitude, longitude := Radians2Degrees(lonMin) as Longitude ),
-          MaxPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMax) as Latitude, longitude := Radians2Degrees(lonMax) as Longitude )
+          MinPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMin) as LineOfLatitude, longitude := Radians2Degrees(lonMin) as LineOfLongitude ),
+          MaxPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMax) as LineOfLatitude, longitude := Radians2Degrees(lonMax) as LineOfLongitude )
           );
     end;
 

@@ -2,16 +2,16 @@
 
 type
 
-  Latitude = public type Double;
-  Longitude = public type Double;
+  LineOfLatitude = public type Double;
+  LineOfLongitude = public type Double;
 
   {$IF TOFFEE}
   PlatformLocationCoordinate2D = public CoreLocation.CLLocationCoordinate2D;
   {$ELSE}
   PlatformLocationCoordinate2D = public class
   public
-    property Latitude:Latitude read write;
-    property Longitude:Longitude read write;
+    property latitude:LineOfLatitude read write;
+    property longitude:LineOfLongitude read write;
 
   end;
   {$ENDIF}
@@ -19,26 +19,26 @@ type
   LocationCoordinate2D = public class mapped to PlatformLocationCoordinate2D
 
   public
-    property latitude: Latitude
-      read mapped.latitude as Latitude
+    property latitude: LineOfLatitude
+      read mapped.latitude as LineOfLatitude
       write
       begin
         {$IF TOFFEE}
         mapped.latitude := Double(value);
         {$ELSE}
-        mapped.Latitude := value;
+        mapped.latitude := value;
         {$ENDIF}
 
       end;
 
-    property longitude: Longitude
-      read mapped.longitude as Longitude
+    property longitude: LineOfLongitude
+      read mapped.longitude as LineOfLongitude
       write
       begin
         {$IF TOFFEE}
         mapped.longitude := Double(value);
         {$ELSE}
-        mapped.Longitude := value;
+        mapped.longitude := value;
         {$ENDIF}
 
       end;
@@ -52,7 +52,7 @@ type
     constructor; mapped to constructor;
     {$ENDIF}
 
-    constructor(latitudeValue:Latitude;longitudeValue:Longitude);
+    constructor(latitudeValue:LineOfLatitude;longitudeValue:LineOfLongitude);
     begin
 
       {$IF TOFFEE}

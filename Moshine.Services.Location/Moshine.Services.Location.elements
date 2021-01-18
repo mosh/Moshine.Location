@@ -61,7 +61,7 @@
       <Private>True</Private>
     </ProjectReference>
     <Reference Include="CoreLocation" />
-    <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+    <RemoteProjectReference Include="github.com/mosh/RealmImport/Realm.elements:*">
       <Private>True</Private>
       <LFS>True</LFS>
     </RemoteProjectReference>

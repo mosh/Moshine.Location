@@ -94,6 +94,10 @@
     <Compile Include="Models\LocationCoordinate2D.pas" />
     <Compile Include="Convert.pas" />
     <Compile Include="LocationCoordinate2DExtensions.pas" />
+    <Compile Include="GPXReader.pas" />
+    <Compile Include="Models\GPX\Track.pas" />
+    <Compile Include="Models\GPX\Point.pas" />
+    <Compile Include="GPXWriter.pas" />
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
     <Reference Include="CoreLocation" />

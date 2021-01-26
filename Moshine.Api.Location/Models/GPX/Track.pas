@@ -5,12 +5,12 @@ uses
 
 type
 
-  Track = public class
+  GPXTrack = public class
   private
   protected
   public
     property Name:String;
-    property Points:List<Point> := new List<Point>;
+    property Points:List<GPXPoint> := new List<GPXPoint>;
   end;
 
 end.

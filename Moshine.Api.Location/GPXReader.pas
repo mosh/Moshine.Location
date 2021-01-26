@@ -11,7 +11,7 @@ type
   private
   protected
 
-    method ProcessElements(someTrack:Track; elements: sequence of XmlElement);
+    method ProcessElements(someTrack:GPXTrack; elements: sequence of XmlElement);
     begin
       for each element in elements do
       begin
@@ -22,7 +22,7 @@ type
             end;
           'trkpt':
             begin
-              var newPoint := new Point;
+              var newPoint := new GPXPoint;
 
               var lat := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lat').Value) as LineOfLatitude;
               var lon := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lon').Value) as LineOfLongitude;
@@ -38,7 +38,7 @@ type
 
     end;
 
-    method ProcessNodes(someTrack:Track; nodes:ImmutableList<XmlNode>);
+    method ProcessNodes(someTrack:GPXTrack; nodes:ImmutableList<XmlNode>);
     begin
       for each node in nodes do
       begin
@@ -60,10 +60,10 @@ type
 
   public
 
-    method Read(text:String):Track;
+    method Read(text:String):GPXTrack;
     begin
 
-      var newTrack := new Track;
+      var newTrack := new GPXTrack;
 
       var parser := new XmlParser(text);
 

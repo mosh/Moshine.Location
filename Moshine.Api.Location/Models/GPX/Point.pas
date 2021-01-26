@@ -4,7 +4,8 @@ uses
   Moshine.Api.Location.Models,
   RemObjects.Elements.RTL;
 type
-  Point = public class
+
+  GPXPoint = public class
   public
     property Coordinate:LocationCoordinate2D;
     property Elevation:Double;

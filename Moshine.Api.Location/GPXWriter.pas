@@ -5,11 +5,12 @@ uses
   RemObjects.Elements.RTL;
 
 type
+
   GPXWriter = public class
   private
   protected
   public
-    method Write(someTrack:Track):String;
+    method Write(someTrack:GPXTrack):String;
     begin
 
       var gpxElement := new XmlElement withName('gpx');
@@ -35,7 +36,7 @@ type
 
         var eleElement := new XmlElement withName('ele');
         var eleValue := new XmlText(eleElement);
-        eleValue.value := Convert.ToString(point.Elevation);
+        eleValue.Value := Convert.ToString(point.Elevation);
         trkptElement.AddElement(eleElement);
         var timeElement := new XmlElement withName('time');
         var textElement := new XmlText (timeElement);

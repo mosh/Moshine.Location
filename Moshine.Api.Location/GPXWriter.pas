@@ -29,9 +29,9 @@ type
       for each point in someTrack.Points do
       begin
         var trkptElement := new XmlElement withName('trkpt');
-        var lonAttr := new XmlAttribute('lon',nil, Convert.ToString(point.Coordinate.longitude));
+        var lonAttr := new XmlAttribute('lon',nil, Convert.ToString(Double(point.Coordinate.longitude)));
         trkptElement.AddAttribute(lonAttr);
-        var latAttr := new XmlAttribute('lat',nil, Convert.ToString(point.Coordinate.latitude));
+        var latAttr := new XmlAttribute('lat',nil, Convert.ToString(Double(point.Coordinate.latitude)));
         trkptElement.AddAttribute(latAttr);
 
         var eleElement := new XmlElement withName('ele');

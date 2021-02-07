@@ -9,8 +9,11 @@ type
   private
   protected
   public
+    property Link:String;
+    property LinkText:String;
     property Name:String;
     property Points:List<GPXPoint> := new List<GPXPoint>;
+    property Time:DateTime;
   end;
 
 end.

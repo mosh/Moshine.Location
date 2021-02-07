@@ -1,7 +1,6 @@
 ﻿namespace Moshine.Services.Location.Models;
 
 
-{$IFDEF COCOA}
 {$IFDEF IOS}
 uses
   Realm,
@@ -26,7 +25,5 @@ type
   end;
 
 {$ENDIF}
-{$ENDIF}
-
 
 end.

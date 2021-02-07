@@ -92,6 +92,9 @@
       <ProjectFile>..\Moshine.Api.Location\Moshine.Api.Location.elements</ProjectFile>
       <Private>True</Private>
     </ProjectReference>
+    <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+      <Private>True</Private>
+    </RemoteProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
 </Project>

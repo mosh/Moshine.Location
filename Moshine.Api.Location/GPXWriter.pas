@@ -15,13 +15,22 @@ type
 
       var gpxElement := new XmlElement withName('gpx');
       var metaElement := new XmlElement withName('metadata');
+      var linkElement := new XmlElement withName('link');
+      linkElement.AddAttribute(new XmlAttribute('href',nil,someTrack.Link));
+      var textElement := new XmlElement withName('text');
+      textElement.Value := someTrack.LinkText;
+      linkElement.AddElement(textElement);
+      metaElement.AddElement(linkElement);
+      var timeElement := new XmlElement withName('time');
+      timeElement.Value := someTrack.Time.ToISO8601String;
+      metaElement.AddElement(timeElement);
+
       var trkElement := new XmlElement withName('trk');
 
       gpxElement.AddElement(metaElement);
       gpxElement.AddElement(trkElement);
       var nameElement := new XmlElement withName('name');
-      var nameTextElement := new XmlText(nameElement);
-      nameTextElement.Value := someTrack.Name;
+      nameElement.Value :=  someTrack.Name;
       trkElement.AddElement(nameElement);
 
       var trksegElement := new XmlElement withName('trkseg');
@@ -35,19 +44,25 @@ type
         trkptElement.AddAttribute(latAttr);
 
         var eleElement := new XmlElement withName('ele');
-        var eleValue := new XmlText(eleElement);
-        eleValue.Value := Convert.ToString(point.Elevation);
+        eleElement.Value := Convert.ToString(point.Elevation);
         trkptElement.AddElement(eleElement);
-        var timeElement := new XmlElement withName('time');
-        var textElement := new XmlText (timeElement);
-        textElement.Value := point.Time.ToString;
+        var trkptTimeElement := new XmlElement withName('time');
+        trkptTimeElement.Value := point.Time.ToISO8601String;
+        trkptElement.AddElement(trkptTimeElement);
 
         trksegElement.AddElement(trkptElement);
       end;
 
+      trkElement.AddElement(trksegElement);
+
       var document := XmlDocument.WithRootElement(gpxElement);
 
-      exit document.ToString;
+      var options := new XmlFormattingOptions;
+      options.NewLineForElements := true;
+      options.WriteNewLineAtEnd := true;
+      options.WhitespaceStyle := XmlWhitespaceStyle.PreserveWhitespaceAroundText;
+
+      exit document.ToString(options);
     end;
 
   end;

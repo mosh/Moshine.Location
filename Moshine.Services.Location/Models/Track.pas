@@ -1,6 +1,5 @@
 ﻿namespace Moshine.Services.Location.Models;
 
-{$IFDEF COCOA}
 {$IFDEF IOS}
 
 uses
@@ -23,7 +22,6 @@ type
 
   end;
 
-{$ENDIF}
 {$ENDIF}
 
 end.

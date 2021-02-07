@@ -1,6 +1,5 @@
 ﻿namespace Moshine.Services.Location;
 
-{$IFDEF COCOA}
 {$IFDEF IOS}
 
 uses
@@ -17,7 +16,7 @@ type
   TrackDelegate = public block (value:TrackViewModel);
   ReceivedLocationDelegate = public block(value:Location);
 
-
+  [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
   private
     property workerQueue:NSOperationQueue;
@@ -183,7 +182,7 @@ type
     begin
       var realm := RLMRealm.defaultRealm;
       var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
-      var count := Track.allObjectsInRealm(realm).Count;
+      var count := Track.allObjectsInRealm(realm).count;
       exit (assigned(activeTrack), count);
     end;
 
@@ -285,7 +284,6 @@ type
 
   end;
 
-{$ENDIF}
 {$ENDIF}
 
 end.

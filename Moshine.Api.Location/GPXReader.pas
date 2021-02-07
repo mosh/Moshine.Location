@@ -15,8 +15,21 @@ type
     begin
       for each element in elements do
       begin
-        writeLn(element.LocalName);
         case element.LocalName of
+          'link':
+            begin
+              var hRef := element.Attributes.FirstOrDefault(a -> a.LocalName = 'href');
+              if(assigned(hRef))then
+              begin
+                someTrack.Link := hRef.Value;
+                someTrack.LinkText := element.Value;
+              end;
+
+            end;
+          'name':
+            begin
+              someTrack.Name := element.Value;
+            end;
           'trk':
             begin
             end;
@@ -28,9 +41,30 @@ type
               var lon := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lon').Value) as LineOfLongitude;
 
               newPoint.Coordinate := new Moshine.Api.Location.Models.LocationCoordinate2D(lat, lon);
-              newPoint.Elevation := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'ele').Value);
 
               someTrack.Points.Add(newPoint);
+
+
+            end;
+          'ele':
+            begin
+              var currentPoint := someTrack.Points[someTrack.Points.Count-1];
+              currentPoint.Elevation := Convert.ToDouble(element.Value);
+            end;
+          'time':
+            begin
+
+              var time := DateTime.TryParseISO8601(element.Value);
+
+              if(someTrack.Points.Count>0) then
+              begin
+                var currentPoint := someTrack.Points[someTrack.Points.Count-1];
+                currentPoint.Time := time;
+              end
+              else
+              begin
+                someTrack.Time := time;
+              end;
             end;
         end;
         ProcessElements(someTrack, element.Elements);
@@ -47,8 +81,6 @@ type
           XmlNodeType.Element:
             begin
               var element:XmlElement := node as XmlElement;
-              writeLn(element.LocalName);
-              //ProcessNodes(someTrack, element.Nodes);
               ProcessElements(someTrack, element.Elements);
               break;
             end;

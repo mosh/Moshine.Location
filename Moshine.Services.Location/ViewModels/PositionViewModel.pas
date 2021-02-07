@@ -1,6 +1,5 @@
 ﻿namespace Moshine.Services.Location.ViewModels;
 
-{$IFDEF COCOA}
 {$IFDEF IOS}
 
 uses
@@ -14,7 +13,6 @@ type
     property Now:DateTime;
   end;
 
-{$ENDIF}
 {$ENDIF}
 
 end.

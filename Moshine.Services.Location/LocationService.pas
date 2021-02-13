@@ -100,6 +100,7 @@ type
 
     method startTrack:String;
     begin
+      {$IFDEF TOFFEE}
       var id := '';
       var realm := RLMRealm.defaultRealm;
 
@@ -121,11 +122,17 @@ type
       realm.addOrUpdateObject(newTrack);
       realm.commitWriteTransaction;
       exit newTrack.Id;
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
+
 
     end;
 
     method stopTrack:String;
     begin
+      {$IFDEF TOFFEE}
+
       var id := '';
       var realm := RLMRealm.defaultRealm;
 
@@ -143,10 +150,14 @@ type
 
       realm.commitWriteTransaction;
       exit id;
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
     end;
 
     method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
     begin
+      {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
 
       var allTrackLocations := Position.allObjectsInRealm(realm).Where(l -> l.TrackId = trackId).OrderBy(l -> l.Now).ToList;
@@ -175,19 +186,27 @@ type
       end;
 
       exit (nil, nil, 0);
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
 
     end;
 
     method trackStats:tuple of (Boolean, Integer);
     begin
+      {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
       var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
       var count := Track.allObjectsInRealm(realm).count;
       exit (assigned(activeTrack), count);
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
     end;
 
     method addPosition(latitude:Double; longitude:Double):Boolean;
     begin
+      {$IFDEF TOFFEE}
       var added := false;
       var realm := RLMRealm.defaultRealm;
 
@@ -211,21 +230,29 @@ type
       realm.commitWriteTransaction;
 
       exit added;
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
     end;
 
     method positions(trackId:String):sequence of PositionViewModel;
     begin
+      {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
 
       exit Position.allObjectsInRealm(realm)
         .Where(p -> p.TrackId = trackId)
         .OrderBy(p -> p.Now)
         .Select(p -> new PositionViewModel( Now := p.Now, Location := new LocationCoordinate2D(p.Latitude, p.Longitude))).ToList;
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
 
     end;
 
     method tracks(updatesDelegate:TrackDelegate):sequence of TrackViewModel;
     begin
+      {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
 
       var tracks := Track.allObjectsInRealm(realm).OrderByDescending(t -> t.StartDate)
@@ -260,6 +287,10 @@ type
 
 
       exit tracks;
+      {$ELSE}
+      raise new NotImplementedException;
+      {$ENDIF}
+
     end;
 
 

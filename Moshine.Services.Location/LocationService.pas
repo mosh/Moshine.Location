@@ -286,7 +286,7 @@ type
       workerQueue.addOperation(outerExecutionBlock);
 
 
-      exit tracks;
+      exit sortedTracks;
       {$ELSE}
       raise new NotImplementedException;
       {$ENDIF}

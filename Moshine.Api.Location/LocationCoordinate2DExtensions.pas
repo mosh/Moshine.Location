@@ -8,8 +8,15 @@ type
 
   BoundingBox = public class
   public
-    property MinPoint: LocationCoordinate2D;
-    property MaxPoint: LocationCoordinate2D;
+    property MinPoint: LocationCoordinate2D read;
+    property MaxPoint: LocationCoordinate2D read;
+
+    constructor(min,max:LocationCoordinate2D);
+    begin
+      MinPoint:= min;
+      MaxPoint:= max;
+    end;
+
   end;
 
   // http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
@@ -79,10 +86,10 @@ type
       var lonMin := lon - halfSide / pradius;
       var lonMax := lon + halfSide / pradius;
 
-      exit new BoundingBox (
-          MinPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMin) as LineOfLatitude, longitude := Radians2Degrees(lonMin) as LineOfLongitude ),
-          MaxPoint := new LocationCoordinate2D ( latitude := Radians2Degrees(latMax) as LineOfLatitude, longitude := Radians2Degrees(lonMax) as LineOfLongitude )
-          );
+      var minPoint := new LocationCoordinate2D (Radians2Degrees(latMin) as LineOfLatitude, Radians2Degrees(lonMin) as LineOfLongitude);
+      var maxPoint := new LocationCoordinate2D (Radians2Degrees(latMax) as LineOfLatitude, Radians2Degrees(lonMax) as LineOfLongitude);
+
+      exit new BoundingBox (minPoint, maxPoint);
     end;
 
     // http://mathforum.org/library/drmath/view/55417.html
@@ -117,7 +124,8 @@ type
         * RemObjects.Elements.RTL.Math.Sin(dLon / 2)
         * RemObjects.Elements.RTL.Math.Cos(lat1)
         * RemObjects.Elements.RTL.Math.Cos(lat2);
-      var c := 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
+
+      //var c := 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
       exit r * 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
 
     end;

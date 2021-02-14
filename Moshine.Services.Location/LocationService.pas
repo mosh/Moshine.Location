@@ -255,13 +255,13 @@ type
       {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
 
-      var tracks := Track.allObjectsInRealm(realm).OrderByDescending(t -> t.StartDate)
+      var sortedTracks := Track.allObjectsInRealm(realm).OrderByDescending(t -> t.StartDate)
         .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
 
       var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock
         begin
 
-          for each model in tracks do
+          for each model in sortedTracks do
           begin
 
             var information := trackInformation(model.Id);

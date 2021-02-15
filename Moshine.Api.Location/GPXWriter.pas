@@ -10,50 +10,98 @@ type
   private
   protected
   public
-    method Write(someTrack:GPXTrack):String;
+    method Write(someGPX:GPX):String;
     begin
 
       var gpxElement := new XmlElement withName('gpx');
-      var metaElement := new XmlElement withName('metadata');
-      var linkElement := new XmlElement withName('link');
-      linkElement.AddAttribute(new XmlAttribute('href',nil,someTrack.Link));
-      var textElement := new XmlElement withName('text');
-      textElement.Value := someTrack.LinkText;
-      linkElement.AddElement(textElement);
-      metaElement.AddElement(linkElement);
-      var timeElement := new XmlElement withName('time');
-      timeElement.Value := someTrack.Time.ToISO8601String;
-      metaElement.AddElement(timeElement);
 
-      var trkElement := new XmlElement withName('trk');
-
-      gpxElement.AddElement(metaElement);
-      gpxElement.AddElement(trkElement);
-      var nameElement := new XmlElement withName('name');
-      nameElement.Value :=  someTrack.Name;
-      trkElement.AddElement(nameElement);
-
-      var trksegElement := new XmlElement withName('trkseg');
-
-      for each point in someTrack.Points do
+      if((assigned(someGPX.Time)) or (not string.IsNullOrEmpty(someGPX.Link)) or (not string.IsNullOrEmpty(someGPX.LinkText))) then
       begin
-        var trkptElement := new XmlElement withName('trkpt');
-        var lonAttr := new XmlAttribute('lon',nil, Convert.ToString(Double(point.Coordinate.longitude)));
-        trkptElement.AddAttribute(lonAttr);
-        var latAttr := new XmlAttribute('lat',nil, Convert.ToString(Double(point.Coordinate.latitude)));
-        trkptElement.AddAttribute(latAttr);
 
-        var eleElement := new XmlElement withName('ele');
-        eleElement.Value := Convert.ToString(point.Elevation);
-        trkptElement.AddElement(eleElement);
-        var trkptTimeElement := new XmlElement withName('time');
-        trkptTimeElement.Value := point.Time.ToISO8601String;
-        trkptElement.AddElement(trkptTimeElement);
+        var metaElement := new XmlElement withName('metadata');
+        gpxElement.AddElement(metaElement);
 
-        trksegElement.AddElement(trkptElement);
+        if((not string.IsNullOrEmpty(someGPX.Link)) or (not string.IsNullOrEmpty(someGPX.LinkText)))then
+        begin
+          var linkElement := new XmlElement withName('link');
+
+          if(not string.IsNullOrEmpty(someGPX.Link))then
+          begin
+              linkElement.AddAttribute(new XmlAttribute('href',nil,someGPX.Link));
+              if(not string.IsNullOrEmpty(someGPX.LinkText))then
+              begin
+                var textElement := new XmlElement withName('text');
+                textElement.Value := someGPX.LinkText;
+                linkElement.AddElement(textElement);
+              end;
+
+          end;
+          metaElement.AddElement(linkElement);
+        end;
+
+        if(assigned(someGPX.Time))then
+        begin
+          var timeElement := new XmlElement withName('time');
+          timeElement.Value := someGPX.Time.ToISO8601String;
+          metaElement.AddElement(timeElement);
+        end;
       end;
 
-      trkElement.AddElement(trksegElement);
+      if (someGPX.Track.Points.Any) then
+      begin
+
+        var trkElement := new XmlElement withName('trk');
+
+        gpxElement.AddElement(trkElement);
+        var nameElement := new XmlElement withName('name');
+        nameElement.Value :=  someGPX.Track.Name;
+        trkElement.AddElement(nameElement);
+
+        var trksegElement := new XmlElement withName('trkseg');
+
+        for each point in someGPX.Track.Points do
+        begin
+          var trkptElement := new XmlElement withName('trkpt');
+          var lonAttr := new XmlAttribute('lon',nil, Convert.ToString(Double(point.Coordinate.longitude)));
+          trkptElement.AddAttribute(lonAttr);
+          var latAttr := new XmlAttribute('lat',nil, Convert.ToString(Double(point.Coordinate.latitude)));
+          trkptElement.AddAttribute(latAttr);
+
+          var eleElement := new XmlElement withName('ele');
+          eleElement.Value := Convert.ToString(point.Elevation);
+          trkptElement.AddElement(eleElement);
+          var trkptTimeElement := new XmlElement withName('time');
+          trkptTimeElement.Value := point.Time.ToISO8601String;
+          trkptElement.AddElement(trkptTimeElement);
+
+          trksegElement.AddElement(trkptElement);
+        end;
+
+        trkElement.AddElement(trksegElement);
+      end;
+
+      if(someGPX.Journey.Points.Any)then
+      begin
+        for each point in someGPX.Journey.Points do
+        begin
+          var wptElement := new XmlElement withName('wpt');
+          var lonAttr := new XmlAttribute('lon',nil, Convert.ToString(Double(point.Coordinate.longitude)));
+          wptElement.AddAttribute(lonAttr);
+          var latAttr := new XmlAttribute('lat',nil, Convert.ToString(Double(point.Coordinate.latitude)));
+          wptElement.AddAttribute(latAttr);
+
+          var eleElement := new XmlElement withName('ele');
+          eleElement.Value := Convert.ToString(point.Elevation);
+          wptElement.AddElement(eleElement);
+          var wptTimeElement := new XmlElement withName('time');
+          wptTimeElement.Value := point.Time.ToISO8601String;
+          wptElement.AddElement(wptTimeElement);
+
+          gpxElement.AddElement(wptElement);
+
+        end;
+
+      end;
 
       var document := XmlDocument.WithRootElement(gpxElement);
 

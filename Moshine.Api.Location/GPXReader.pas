@@ -11,8 +11,16 @@ type
   private
   protected
 
-    method ProcessElements(someTrack:GPXTrack; elements: sequence of XmlElement);
+    method ProcessElements(newGPX:GPX; elements: sequence of XmlElement; createdPoint:GPXPoint);
     begin
+
+      var currentPoint:GPXPoint := nil;
+
+      if(assigned(createdPoint))then
+      begin
+        currentPoint := createdPoint;
+      end;
+
       for each element in elements do
       begin
         case element.LocalName of
@@ -21,19 +29,19 @@ type
               var hRef := element.Attributes.FirstOrDefault(a -> a.LocalName = 'href');
               if(assigned(hRef))then
               begin
-                someTrack.Link := hRef.Value;
-                someTrack.LinkText := element.Value;
+                newGPX.Link := hRef.Value;
+                newGPX.LinkText := element.Value;
               end;
 
             end;
           'name':
             begin
-              someTrack.Name := element.Value;
+              newGPX.Track.Name := element.Value;
             end;
           'trk':
             begin
             end;
-          'trkpt':
+          'wpt','trkpt':
             begin
               var newPoint := new GPXPoint;
 
@@ -42,37 +50,45 @@ type
 
               newPoint.Coordinate := new Moshine.Api.Location.Models.LocationCoordinate2D(lat, lon);
 
-              someTrack.Points.Add(newPoint);
+              case element.LocalName of
+                'wpt':
+                  newGPX.Journey.Points.Add(newPoint);
+                'trkpt':
+                  newGPX.Track.Points.Add(newPoint);
+              end;
+
+              currentPoint := newPoint;
 
 
             end;
           'ele':
             begin
-              var currentPoint := someTrack.Points[someTrack.Points.Count-1];
-              currentPoint.Elevation := Convert.ToDouble(element.Value);
+              if(assigned(currentPoint))then
+              begin
+                currentPoint.Elevation := Convert.ToDouble(element.Value);
+              end;
             end;
           'time':
             begin
 
               var time := DateTime.TryParseISO8601(element.Value);
 
-              if(someTrack.Points.Count>0) then
+              if(assigned(currentPoint)) then
               begin
-                var currentPoint := someTrack.Points[someTrack.Points.Count-1];
                 currentPoint.Time := time;
               end
               else
               begin
-                someTrack.Time := time;
+                newGPX.Time := time;
               end;
             end;
         end;
-        ProcessElements(someTrack, element.Elements);
+        ProcessElements(newGPX, element.Elements, currentPoint);
       end;
 
     end;
 
-    method ProcessNodes(someTrack:GPXTrack; nodes:ImmutableList<XmlNode>);
+    method ProcessNodes(newGPX:GPX; nodes:ImmutableList<XmlNode>);
     begin
       for each node in nodes do
       begin
@@ -81,7 +97,7 @@ type
           XmlNodeType.Element:
             begin
               var element:XmlElement := node as XmlElement;
-              ProcessElements(someTrack, element.Elements);
+              ProcessElements(newGPX, element.Elements,nil);
               break;
             end;
         end;
@@ -92,18 +108,18 @@ type
 
   public
 
-    method Read(text:String):GPXTrack;
+    method Read(text:String):GPX;
     begin
 
-      var newTrack := new GPXTrack;
+      var newGPX := new GPX;
 
       var parser := new XmlParser(text);
 
       var document := parser.Parse;
 
-      ProcessNodes(newTrack, document.Nodes);
+      ProcessNodes(newGPX, document.Nodes);
 
-      exit newTrack;
+      exit newGPX;
     end;
 
   end;

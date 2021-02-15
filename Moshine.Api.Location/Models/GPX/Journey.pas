@@ -4,12 +4,10 @@ uses
   RemObjects.Elements.RTL;
 
 type
-
-  GPXTrack = public class
+  GPXJourney = public class
   private
   protected
   public
-    property Name:String;
     property Points:List<GPXPoint> := new List<GPXPoint>;
   end;
 

@@ -98,6 +98,8 @@
     <Compile Include="Models\GPX\Track.pas" />
     <Compile Include="Models\GPX\Point.pas" />
     <Compile Include="GPXWriter.pas" />
+    <Compile Include="Models\GPX\GPX.pas" />
+    <Compile Include="Models\GPX\Journey.pas" />
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
     <Reference Include="CoreLocation" />

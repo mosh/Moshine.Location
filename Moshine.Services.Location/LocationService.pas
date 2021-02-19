@@ -1,7 +1,5 @@
 ﻿namespace Moshine.Services.Location;
 
-{$IFDEF IOS}
-
 uses
   CoreLocation,
   Moshine.Services.Location.Models,
@@ -77,6 +75,14 @@ type
 
     end;
 
+    property ActiveTrack:Track
+      read
+        begin
+          var realm := RLMRealm.defaultRealm;
+          var conditionBlock := method(item:Track):Boolean begin exit item.Active; end;
+          exit Track.allObjectsInRealm(realm).FirstOrDefault(t -> conditionBlock(t));
+        end;
+
 
   public
 
@@ -106,7 +112,7 @@ type
 
       realm.beginWriteTransaction;
 
-      var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
+      var activeTrack := ActiveTrack;
 
       if(assigned(activeTrack))then
       begin
@@ -138,7 +144,7 @@ type
 
       realm.beginWriteTransaction;
 
-      var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
+      var activeTrack := ActiveTrack;
 
       if(assigned(activeTrack))then
       begin
@@ -196,7 +202,7 @@ type
     begin
       {$IFDEF TOFFEE}
       var realm := RLMRealm.defaultRealm;
-      var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
+      var activeTrack := ActiveTrack;
       var count := Track.allObjectsInRealm(realm).count;
       exit (assigned(activeTrack), count);
       {$ELSE}
@@ -212,7 +218,7 @@ type
 
       realm.beginWriteTransaction;
 
-      var activeTrack := Track.allObjectsInRealm(realm).FirstOrDefault(o -> o.Active);
+      var activeTrack := ActiveTrack;
 
       if(assigned(activeTrack))then
       begin
@@ -314,7 +320,5 @@ type
 
 
   end;
-
-{$ENDIF}
 
 end.

@@ -1,7 +1,5 @@
 ﻿namespace Moshine.Services.Location.Models;
 
-{$IFDEF IOS}
-
 uses
   Realm,
   RemObjects.Elements.RTL;
@@ -21,7 +19,5 @@ type
     end;
 
   end;
-
-{$ENDIF}
 
 end.

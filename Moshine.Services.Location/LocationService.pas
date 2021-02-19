@@ -78,9 +78,13 @@ type
     property ActiveTrack:Track
       read
         begin
+          {$IFDEF TOFFEE}
           var realm := RLMRealm.defaultRealm;
           var conditionBlock := method(item:Track):Boolean begin exit item.Active; end;
           exit Track.allObjectsInRealm(realm).FirstOrDefault(t -> conditionBlock(t));
+          {$ELSE}
+          raise new NotImplementedException;
+          {$ENDIF}
         end;
 
 
@@ -131,8 +135,6 @@ type
       {$ELSE}
       raise new NotImplementedException;
       {$ENDIF}
-
-
     end;
 
     method stopTrack:String;

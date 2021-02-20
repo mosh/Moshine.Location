@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.watchOS'">
   </ItemGroup>
-  <PropertyGroup Condition="'$(Target)' == 'Island.macOS'">
+  <PropertyGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
     <Mode>Island</Mode>
     <SubMode>Darwin</SubMode>
     <SDK>macOS</SDK>

@@ -58,7 +58,7 @@ type
           end
           else
           begin
-            RealmForUrl := RLMRealm.realmWithURL(Url);
+            RealmForUrl := RLMRealm.realmWithURL(RealmUrl);
             exit RealmForUrl;
           end;
           {$ELSE}

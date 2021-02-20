@@ -17,6 +17,12 @@ type
   [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
   private
+
+    {$IFDEF MACOS}
+    property RealmUrl:NSURL;
+    property RealmForUrl:RLMRealm;
+    {$ENDIF}
+
     property workerQueue:NSOperationQueue;
 
     class property geoCoder:CLGeocoder := new CLGeocoder;
@@ -41,6 +47,24 @@ type
         end;
 
     end;
+
+    property Realm:RLMRealm
+      read
+        begin
+          {$IFDEF MACOS}
+          if(assigned(RealmForUrl))then
+          begin
+            exit RealmForUrl;
+          end
+          else
+          begin
+            RealmForUrl := RLMRealm.realmWithURL(Url);
+            exit RealmForUrl;
+          end;
+          {$ELSE}
+          exit RLMRealm.defaultRealm;
+          {$ENDIF}
+        end;
 
     method receivedVisit(visit:CLVisit) WithDescription(description:String);
     begin
@@ -79,9 +103,8 @@ type
       read
         begin
           {$IFDEF TOFFEE}
-          var realm := RLMRealm.defaultRealm;
           var conditionBlock := method(item:Track):Boolean begin exit item.Active; end;
-          exit Track.allObjectsInRealm(realm).FirstOrDefault(t -> conditionBlock(t));
+          exit Track.allObjectsInRealm(Realm).FirstOrDefault(t -> conditionBlock(t));
           {$ELSE}
           raise new NotImplementedException;
           {$ENDIF}
@@ -108,20 +131,30 @@ type
 
     end;
 
+    {$IFDEF MACOS}
+
+    constructor withFile(url:NSURL);
+    begin
+      constructor;
+
+      RealmUrl := url;
+    end;
+
+    {$ENDIF}
+
     method startTrack:String;
     begin
       {$IFDEF TOFFEE}
       var id := '';
-      var realm := RLMRealm.defaultRealm;
 
-      realm.beginWriteTransaction;
+      Realm.beginWriteTransaction;
 
       var activeTrack := ActiveTrack;
 
       if(assigned(activeTrack))then
       begin
         activeTrack.Active := false;
-        realm.addOrUpdateObject(activeTrack);
+        Realm.addOrUpdateObject(activeTrack);
 
       end;
 
@@ -129,8 +162,8 @@ type
       newTrack.Id := Guid.NewGuid.ToString;
       newTrack.StartDate := DateTime.UtcNow;
       newTrack.Active := true;
-      realm.addOrUpdateObject(newTrack);
-      realm.commitWriteTransaction;
+      Realm.addOrUpdateObject(newTrack);
+      Realm.commitWriteTransaction;
       exit newTrack.Id;
       {$ELSE}
       raise new NotImplementedException;
@@ -142,21 +175,20 @@ type
       {$IFDEF TOFFEE}
 
       var id := '';
-      var realm := RLMRealm.defaultRealm;
 
-      realm.beginWriteTransaction;
+      Realm.beginWriteTransaction;
 
       var activeTrack := ActiveTrack;
 
       if(assigned(activeTrack))then
       begin
         activeTrack.Active := false;
-        realm.addOrUpdateObject(activeTrack);
+        Realm.addOrUpdateObject(activeTrack);
 
         id := activeTrack.Id;
       end;
 
-      realm.commitWriteTransaction;
+      Realm.commitWriteTransaction;
       exit id;
       {$ELSE}
       raise new NotImplementedException;
@@ -166,9 +198,8 @@ type
     method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
     begin
       {$IFDEF TOFFEE}
-      var realm := RLMRealm.defaultRealm;
 
-      var allTrackLocations := Position.allObjectsInRealm(realm).Where(l -> l.TrackId = trackId).OrderBy(l -> l.Now).ToList;
+      var allTrackLocations := Position.allObjectsInRealm(Realm).Where(l -> l.TrackId = trackId).OrderBy(l -> l.Now).ToList;
 
       if(allTrackLocations.Count >= 2)then
       begin
@@ -203,9 +234,8 @@ type
     method trackStats:tuple of (Boolean, Integer);
     begin
       {$IFDEF TOFFEE}
-      var realm := RLMRealm.defaultRealm;
       var activeTrack := ActiveTrack;
-      var count := Track.allObjectsInRealm(realm).count;
+      var count := Track.allObjectsInRealm(Realm).count;
       exit (assigned(activeTrack), count);
       {$ELSE}
       raise new NotImplementedException;
@@ -216,9 +246,8 @@ type
     begin
       {$IFDEF TOFFEE}
       var added := false;
-      var realm := RLMRealm.defaultRealm;
 
-      realm.beginWriteTransaction;
+      Realm.beginWriteTransaction;
 
       var activeTrack := ActiveTrack;
 
@@ -231,11 +260,11 @@ type
         newPosition.Latitude := latitude;
         newPosition.Longitude := longitude;
         newPosition.Now := DateTime.UtcNow;
-        realm.addOrUpdateObject(newPosition);
+        Realm.addOrUpdateObject(newPosition);
         added := true;
       end;
 
-      realm.commitWriteTransaction;
+      Realm.commitWriteTransaction;
 
       exit added;
       {$ELSE}
@@ -246,9 +275,7 @@ type
     method positions(trackId:String):sequence of PositionViewModel;
     begin
       {$IFDEF TOFFEE}
-      var realm := RLMRealm.defaultRealm;
-
-      exit Position.allObjectsInRealm(realm)
+      exit Position.allObjectsInRealm(Realm)
         .Where(p -> p.TrackId = trackId)
         .OrderBy(p -> p.Now)
         .Select(p -> new PositionViewModel( Now := p.Now, Location := new LocationCoordinate2D(p.Latitude, p.Longitude))).ToList;
@@ -258,12 +285,22 @@ type
 
     end;
 
+    method tracks:sequence of TrackViewModel;
+    begin
+      {$IFDEF TOFFEE}
+      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.StartDate)
+        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
+      exit sortedTracks;
+      {$ELSE}
+      exit nil;
+      {$ENDIF}
+    end;
+
     method tracks(updatesDelegate:TrackDelegate):sequence of TrackViewModel;
     begin
       {$IFDEF TOFFEE}
-      var realm := RLMRealm.defaultRealm;
 
-      var sortedTracks := Track.allObjectsInRealm(realm).OrderByDescending(t -> t.StartDate)
+      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.StartDate)
         .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
 
       var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock
@@ -310,12 +347,10 @@ type
     method removeAllLocal;
     begin
 
-      var realm := RLMRealm.defaultRealm;
-
-      realm.beginWriteTransaction;
-      realm.deleteObjects(Position.allObjectsInRealm(realm));
-      realm.deleteObjects(Track.allObjectsInRealm(realm));
-      realm.commitWriteTransaction;
+      Realm.beginWriteTransaction;
+      Realm.deleteObjects(Position.allObjectsInRealm(Realm));
+      Realm.deleteObjects(Track.allObjectsInRealm(Realm));
+      Realm.commitWriteTransaction;
 
 
     end;

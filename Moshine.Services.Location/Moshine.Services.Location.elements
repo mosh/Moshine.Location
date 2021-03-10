@@ -41,9 +41,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="#" />
-    <Reference Include="Elements">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="CoreLocation" />
     <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
       <Private>True</Private>
@@ -63,11 +60,35 @@
     <Compile Include="Models\Position.pas" />
     <Compile Include="ViewModels\PositionViewModel.pas" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Target)' == 'Toffee.iOS'">
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
+  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.watchOS'">
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.iOS'">
+    <Reference Include="libElements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.macOS'">
+    <Reference Include="libElements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
+    <Reference Include="libElements">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
     <Mode>Island</Mode>
@@ -78,8 +99,5 @@
     <Mode>Toffee</Mode>
     <SubMode>macOS</SubMode>
   </PropertyGroup>
-  <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
-    <Reference Include="CoreLocation" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
 </Project>

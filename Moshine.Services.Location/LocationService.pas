@@ -51,6 +51,7 @@ type
     property Realm:RLMRealm
       read
         begin
+
           {$IFDEF MACOS}
           if(assigned(RealmForUrl))then
           begin
@@ -288,8 +289,8 @@ type
     method tracks:sequence of TrackViewModel;
     begin
       {$IFDEF TOFFEE}
-      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.StartDate)
-        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
+      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.startDate)
+        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
       exit sortedTracks;
       {$ELSE}
       exit nil;
@@ -298,10 +299,12 @@ type
 
     method tracks(updatesDelegate:TrackDelegate):sequence of TrackViewModel;
     begin
+
       {$IFDEF TOFFEE}
 
-      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.StartDate)
-        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
+
+      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.startDate)
+        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
 
       var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock
         begin
@@ -314,7 +317,7 @@ type
             if(assigned(information.Item1))then
             begin
 
-              model.Stopped := information.Stopped;
+              model.stopped := information.Stopped;
               model.Distance := information.Distance;
 
               NSOperationQueue.mainQueue.addOperationWithBlock

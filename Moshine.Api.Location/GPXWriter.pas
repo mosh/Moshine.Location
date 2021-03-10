@@ -15,20 +15,20 @@ type
 
       var gpxElement := new XmlElement withName('gpx');
 
-      if((assigned(someGPX.Time)) or (not string.IsNullOrEmpty(someGPX.Link)) or (not string.IsNullOrEmpty(someGPX.LinkText))) then
+      if((assigned(someGPX.Time)) or (not String.IsNullOrEmpty(someGPX.Link)) or (not String.IsNullOrEmpty(someGPX.LinkText))) then
       begin
 
         var metaElement := new XmlElement withName('metadata');
         gpxElement.AddElement(metaElement);
 
-        if((not string.IsNullOrEmpty(someGPX.Link)) or (not string.IsNullOrEmpty(someGPX.LinkText)))then
+        if((not String.IsNullOrEmpty(someGPX.Link)) or (not String.IsNullOrEmpty(someGPX.LinkText)))then
         begin
           var linkElement := new XmlElement withName('link');
 
-          if(not string.IsNullOrEmpty(someGPX.Link))then
+          if(not String.IsNullOrEmpty(someGPX.Link))then
           begin
               linkElement.AddAttribute(new XmlAttribute('href',nil,someGPX.Link));
-              if(not string.IsNullOrEmpty(someGPX.LinkText))then
+              if(not String.IsNullOrEmpty(someGPX.LinkText))then
               begin
                 var textElement := new XmlElement withName('text');
                 textElement.Value := someGPX.LinkText;

@@ -134,6 +134,11 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition="'$(Target)' == 'Island.Linux'">
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
     <Reference Include="CoreLocation" />
     <Reference Include="Elements">

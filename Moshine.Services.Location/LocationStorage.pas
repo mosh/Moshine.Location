@@ -185,8 +185,8 @@ type
       {$IFDEF TOFFEE}
       var allTracks := Track.allObjectsInRealm(Realm);
       var sortedTracks := allTracks
-        .OrderByDescending(t -> t.startDate)
-        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
+        .OrderByDescending(t -> t.StartDate)
+        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
       exit sortedTracks;
       {$ELSE}
       exit nil;

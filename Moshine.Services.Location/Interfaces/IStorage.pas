@@ -17,7 +17,6 @@ type
     method tracks:sequence of TrackViewModel;
 
     method positions(trackId:String):sequence of PositionViewModel;
-    method positionsForTrack(trackId:String):List<Position>;
 
     method removeAllLocal;
 

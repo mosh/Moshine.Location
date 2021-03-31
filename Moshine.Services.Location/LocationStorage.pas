@@ -169,16 +169,6 @@ type
       {$ELSE}
       raise new NotImplementedException;
       {$ENDIF}
-
-    end;
-
-    method positionsForTrack(trackId:String):List<Position>;
-    begin
-      {$IFDEF TOFFEE}
-      exit Position.allObjectsInRealm(Realm).Where(l -> l.TrackId = trackId).OrderBy(l -> l.Now).ToList;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
     method removeAllLocal;

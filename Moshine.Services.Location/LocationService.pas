@@ -130,7 +130,7 @@ type
 
     method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
     begin
-      var allTrackLocations := Storage.positionsForTrack(trackId);
+      var allTrackLocations := Storage.positions(trackId).ToList;
 
       if(allTrackLocations.Count >= 2)then
       begin
@@ -144,7 +144,7 @@ type
           var previous := allTrackLocations[x-1];
           var current := allTrackLocations[x];
 
-          var difference := new LocationCoordinate2D(previous.Latitude, previous.Longitude).GreatCircleDistance(new LocationCoordinate2D(current.Latitude, current.Longitude));
+          var difference := previous.Location.GreatCircleDistance(current.Location);
 
           distance := distance + difference;
 

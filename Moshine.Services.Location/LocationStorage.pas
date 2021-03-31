@@ -183,7 +183,9 @@ type
     method tracks:sequence of TrackViewModel;
     begin
       {$IFDEF TOFFEE}
-      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.startDate)
+      var allTracks := Track.allObjectsInRealm(Realm);
+      var sortedTracks := allTracks
+        .OrderByDescending(t -> t.startDate)
         .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
       exit sortedTracks;
       {$ELSE}

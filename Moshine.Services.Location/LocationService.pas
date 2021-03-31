@@ -2,11 +2,11 @@
 
 uses
   CoreLocation,
+  Moshine.Services.Location.Interfaces,
   Moshine.Services.Location.Models,
   Moshine.Services.Location.ViewModels,
   Moshine.Api.Location,
   Moshine.Api.Location.Models,
-  Realm,
   RemObjects.Elements.RTL;
 
 type
@@ -18,10 +18,7 @@ type
   LocationService = public class(ICLLocationManagerDelegate)
   private
 
-    {$IFDEF MACOS}
-    property RealmUrl:NSURL;
-    property RealmForUrl:RLMRealm;
-    {$ENDIF}
+    property Storage:IStorage;
 
     property workerQueue:NSOperationQueue;
 
@@ -48,24 +45,6 @@ type
 
     end;
 
-    property Realm:RLMRealm
-      read
-        begin
-
-          {$IFDEF MACOS}
-          if(assigned(RealmForUrl))then
-          begin
-            exit RealmForUrl;
-          end
-          else
-          begin
-            RealmForUrl := RLMRealm.realmWithURL(RealmUrl);
-            exit RealmForUrl;
-          end;
-          {$ELSE}
-          exit RLMRealm.defaultRealm;
-          {$ENDIF}
-        end;
 
     method receivedVisit(visit:CLVisit) WithDescription(description:String);
     begin
@@ -103,22 +82,11 @@ type
     property ActiveTrack:Track
       read
         begin
-          {$IFDEF TOFFEE}
-          var conditionBlock := method(item:Track):Boolean begin exit item.Active; end;
-          exit Track.allObjectsInRealm(Realm).FirstOrDefault(t -> conditionBlock(t));
-          {$ELSE}
-          raise new NotImplementedException;
-          {$ENDIF}
+          exit Storage.ActiveTrack;
         end;
 
-
-  public
-
-    property ReceivedLocation:ReceivedLocationDelegate;
-
-    constructor;
+    method initialize;
     begin
-
       workerQueue := new NSOperationQueue;
 
       locationManager.requestAlwaysAuthorization;
@@ -129,78 +97,40 @@ type
       locationManager.allowsBackgroundLocationUpdates := true; // 1
       locationManager.startUpdatingLocation;  // 2
 
-
     end;
+
+  public
+
+    property ReceivedLocation:ReceivedLocationDelegate;
+
 
     {$IFDEF MACOS}
-
     constructor withFile(url:NSURL);
     begin
-      constructor;
-
-      RealmUrl := url;
+      Storage := new LocationStorage withUrl(url);
+      initialize;
     end;
-
+    {$ELSE}
+    constructor;
+    begin
+      Storage := new LocationStorage;
+      initialize;
+    end;
     {$ENDIF}
 
     method startTrack:String;
     begin
-      {$IFDEF TOFFEE}
-      var id := '';
-
-      Realm.beginWriteTransaction;
-
-      var activeTrack := ActiveTrack;
-
-      if(assigned(activeTrack))then
-      begin
-        activeTrack.Active := false;
-        Realm.addOrUpdateObject(activeTrack);
-
-      end;
-
-      var newTrack := new Track;
-      newTrack.Id := Guid.NewGuid.ToString;
-      newTrack.StartDate := DateTime.UtcNow;
-      newTrack.Active := true;
-      Realm.addOrUpdateObject(newTrack);
-      Realm.commitWriteTransaction;
-      exit newTrack.Id;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
+      exit Storage.startTrack;
     end;
 
     method stopTrack:String;
     begin
-      {$IFDEF TOFFEE}
-
-      var id := '';
-
-      Realm.beginWriteTransaction;
-
-      var activeTrack := ActiveTrack;
-
-      if(assigned(activeTrack))then
-      begin
-        activeTrack.Active := false;
-        Realm.addOrUpdateObject(activeTrack);
-
-        id := activeTrack.Id;
-      end;
-
-      Realm.commitWriteTransaction;
-      exit id;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
+      exit Storage.stopTrack;
     end;
 
     method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
     begin
-      {$IFDEF TOFFEE}
-
-      var allTrackLocations := Position.allObjectsInRealm(Realm).Where(l -> l.TrackId = trackId).OrderBy(l -> l.Now).ToList;
+      var allTrackLocations := Storage.positionsForTrack(trackId);
 
       if(allTrackLocations.Count >= 2)then
       begin
@@ -226,85 +156,33 @@ type
       end;
 
       exit (nil, nil, 0);
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
 
     end;
 
     method trackStats:tuple of (Boolean, Integer);
     begin
-      {$IFDEF TOFFEE}
-      var activeTrack := ActiveTrack;
-      var count := Track.allObjectsInRealm(Realm).count;
-      exit (assigned(activeTrack), count);
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
+      exit Storage.trackStats;
     end;
 
     method addPosition(latitude:Double; longitude:Double):Boolean;
     begin
-      {$IFDEF TOFFEE}
-      var added := false;
-
-      Realm.beginWriteTransaction;
-
-      var activeTrack := ActiveTrack;
-
-      if(assigned(activeTrack))then
-      begin
-
-        var newPosition := new Position;
-        newPosition.TrackId := activeTrack.Id;
-        newPosition.Id := Guid.NewGuid.ToString;
-        newPosition.Latitude := latitude;
-        newPosition.Longitude := longitude;
-        newPosition.Now := DateTime.UtcNow;
-        Realm.addOrUpdateObject(newPosition);
-        added := true;
-      end;
-
-      Realm.commitWriteTransaction;
-
-      exit added;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
+      exit Storage.addPosition(latitude, longitude);
     end;
 
     method positions(trackId:String):sequence of PositionViewModel;
     begin
-      {$IFDEF TOFFEE}
-      exit Position.allObjectsInRealm(Realm)
-        .Where(p -> p.TrackId = trackId)
-        .OrderBy(p -> p.Now)
-        .Select(p -> new PositionViewModel( Now := p.Now, Location := new LocationCoordinate2D(p.Latitude, p.Longitude))).ToList;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
-
+      exit Storage.positions(trackId);
     end;
 
     method tracks:sequence of TrackViewModel;
     begin
-      {$IFDEF TOFFEE}
-      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.startDate)
-        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
-      exit sortedTracks;
-      {$ELSE}
-      exit nil;
-      {$ENDIF}
+      exit Storage.tracks;
     end;
 
     method tracks(updatesDelegate:TrackDelegate):sequence of TrackViewModel;
     begin
 
-      {$IFDEF TOFFEE}
-
-
-      var sortedTracks := Track.allObjectsInRealm(Realm).OrderByDescending(t -> t.startDate)
-        .Select(t -> new TrackViewModel(Id := t.Id, Start := t.startDate)).ToList;
+      var sortedTracks := Storage.tracks;
 
       var outerExecutionBlock: NSBlockOperation := NSBlockOperation.blockOperationWithBlock
         begin
@@ -317,7 +195,7 @@ type
             if(assigned(information.Item1))then
             begin
 
-              model.stopped := information.Stopped;
+              model.Stopped := information.Stopped;
               model.Distance := information.Distance;
 
               NSOperationQueue.mainQueue.addOperationWithBlock
@@ -335,9 +213,6 @@ type
 
 
       exit sortedTracks;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
 
     end;
 
@@ -349,14 +224,17 @@ type
 
     method removeAllLocal;
     begin
-
-      Realm.beginWriteTransaction;
-      Realm.deleteObjects(Position.allObjectsInRealm(Realm));
-      Realm.deleteObjects(Track.allObjectsInRealm(Realm));
-      Realm.commitWriteTransaction;
-
-
+      Storage.removeAllLocal;
     end;
+
+    method requestLocation;
+    begin
+
+      var status := self.locationManager.authorizationStatus;
+
+      self.locationManager.requestLocation;
+    end;
+
 
 
   end;

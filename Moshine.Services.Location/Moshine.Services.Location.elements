@@ -59,6 +59,8 @@
     <Compile Include="Models\Track.pas" />
     <Compile Include="Models\Position.pas" />
     <Compile Include="ViewModels\PositionViewModel.pas" />
+    <Compile Include="LocationStorage.pas" />
+    <Compile Include="Interfaces\IStorage.pas" />
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
     <Reference Include="Elements">

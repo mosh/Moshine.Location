@@ -89,11 +89,9 @@ type
 
       Realm.beginWriteTransaction;
 
-      var activeTrack := ActiveTrack;
-
-      if(assigned(activeTrack))then
+      if(assigned(ActiveTrack))then
       begin
-        activeTrack.Active := false;
+        ActiveTrack.Active := false;
         Realm.addOrUpdateObject(activeTrack);
 
         id := activeTrack.Id;
@@ -120,9 +118,8 @@ type
     method trackStats:tuple of (Boolean, Integer);
     begin
       {$IFDEF TOFFEE}
-      var activeTrack := ActiveTrack;
       var count := Track.allObjectsInRealm(Realm).count;
-      exit (assigned(activeTrack), count);
+      exit (assigned(ActiveTrack), count);
       {$ELSE}
       raise new NotImplementedException;
       {$ENDIF}

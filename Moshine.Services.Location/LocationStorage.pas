@@ -92,9 +92,9 @@ type
       if(assigned(ActiveTrack))then
       begin
         ActiveTrack.Active := false;
-        Realm.addOrUpdateObject(activeTrack);
+        Realm.addOrUpdateObject(ActiveTrack);
 
-        id := activeTrack.Id;
+        id := ActiveTrack.Id;
       end;
 
       Realm.commitWriteTransaction;

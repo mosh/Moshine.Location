@@ -89,10 +89,12 @@ type
 
       Realm.beginWriteTransaction;
 
-      if(assigned(ActiveTrack))then
+      var active := ActiveTrack;
+
+      if(assigned(active))then
       begin
-        ActiveTrack.Active := false;
-        Realm.addOrUpdateObject(ActiveTrack);
+        active.Active := false;
+        Realm.addOrUpdateObject(active);
 
         id := ActiveTrack.Id;
       end;
@@ -132,13 +134,13 @@ type
 
       Realm.beginWriteTransaction;
 
-      var activeTrack := ActiveTrack;
+      var active := ActiveTrack;
 
-      if(assigned(activeTrack))then
+      if(assigned(active))then
       begin
 
         var newPosition := new Position;
-        newPosition.TrackId := activeTrack.Id;
+        newPosition.TrackId := active.Id;
         newPosition.Id := Guid.NewGuid.ToString;
         newPosition.Latitude := latitude;
         newPosition.Longitude := longitude;

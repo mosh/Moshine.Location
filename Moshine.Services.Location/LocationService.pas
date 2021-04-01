@@ -52,8 +52,8 @@ type
       var newLocation := new Location;
 
       newLocation.Id := Guid.NewGuid.ToString;
-      newLocation.arrivalDate := visit.arrivalDate;
-      newLocation.departureDate := visit.departureDate;
+      newLocation.ArrivalDate := visit.arrivalDate;
+      newLocation.DepartureDate := visit.departureDate;
       newLocation.Description := description;
       newLocation.Latitude := visit.coordinate.latitude;
       newLocation.Longitude := visit.coordinate.longitude;

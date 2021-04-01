@@ -13,8 +13,8 @@ type
     property Latitude:Double;
     property Longitude:Double;
 
-    property arrivalDate: NSDate;
-    property departureDate: NSDate;
+    property ArrivalDate: NSDate;
+    property DepartureDate: NSDate;
 
   end;
 

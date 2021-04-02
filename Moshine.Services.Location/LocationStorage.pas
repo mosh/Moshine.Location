@@ -57,12 +57,12 @@ type
 
       Realm.beginWriteTransaction;
 
-      var activeTrack := ActiveTrack;
+      var track := ActiveTrack;
 
-      if(assigned(activeTrack))then
+      if(assigned(track))then
       begin
-        activeTrack.Active := false;
-        Realm.addOrUpdateObject(activeTrack);
+        track.Active := false;
+        Realm.addOrUpdateObject(track);
 
       end;
 
@@ -89,14 +89,14 @@ type
 
       Realm.beginWriteTransaction;
 
-      var active := ActiveTrack;
+      var track := ActiveTrack;
 
-      if(assigned(active))then
+      if(assigned(track))then
       begin
-        active.Active := false;
-        Realm.addOrUpdateObject(active);
+        track.Active := false;
+        Realm.addOrUpdateObject(track);
 
-        id := ActiveTrack.Id;
+        id := track.Id;
       end;
 
       Realm.commitWriteTransaction;
@@ -121,7 +121,8 @@ type
     begin
       {$IFDEF TOFFEE}
       var count := Track.allObjectsInRealm(Realm).count;
-      exit (assigned(ActiveTrack), count);
+      var track := ActiveTrack;
+      exit (assigned(track), count);
       {$ELSE}
       raise new NotImplementedException;
       {$ENDIF}
@@ -134,13 +135,13 @@ type
 
       Realm.beginWriteTransaction;
 
-      var active := ActiveTrack;
+      var track := ActiveTrack;
 
-      if(assigned(active))then
+      if(assigned(track))then
       begin
 
         var newPosition := new Position;
-        newPosition.TrackId := active.Id;
+        newPosition.TrackId := track.Id;
         newPosition.Id := Guid.NewGuid.ToString;
         newPosition.Latitude := latitude;
         newPosition.Longitude := longitude;

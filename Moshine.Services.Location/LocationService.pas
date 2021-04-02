@@ -58,11 +58,19 @@ type
       newLocation.Latitude := visit.coordinate.latitude;
       newLocation.Longitude := visit.coordinate.longitude;
 
+
       if (addPosition(newLocation.Latitude, newLocation.Longitude))then
       begin
         if(assigned(ReceivedLocation))then
         begin
           ReceivedLocation(newLocation);
+        end;
+      end
+      else
+      begin
+        if(assigned(AdhocLocation))then
+        begin
+          AdhocLocation(newLocation);
         end;
       end;
 
@@ -101,7 +109,10 @@ type
 
   public
 
+    // Called when a location has been added to a track
     property ReceivedLocation:ReceivedLocationDelegate;
+    // Called whenever there is no active track
+    property AdhocLocation:ReceivedLocationDelegate;
 
 
     {$IFDEF MACOS}

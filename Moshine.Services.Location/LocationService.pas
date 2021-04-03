@@ -87,12 +87,6 @@ type
 
     end;
 
-    property ActiveTrack:Track
-      read
-        begin
-          exit Storage.ActiveTrack;
-        end;
-
     method initialize;
     begin
       workerQueue := new NSOperationQueue;
@@ -138,6 +132,19 @@ type
     begin
       exit Storage.stopTrack;
     end;
+
+    property Tracking:Boolean read
+      begin
+        exit assigned(ActiveTrack);
+      end;
+
+
+    property ActiveTrack:Track
+      read
+        begin
+          exit Storage.ActiveTrack;
+        end;
+
 
     method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
     begin

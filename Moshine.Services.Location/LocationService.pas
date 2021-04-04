@@ -12,7 +12,9 @@ uses
 type
 
   TrackDelegate = public block (value:TrackViewModel);
+
   ReceivedLocationDelegate = public block(value:Location);
+  ReceivedPositionDelegate = public block(value:CLLocationCoordinate2D);
 
   [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
@@ -24,27 +26,6 @@ type
 
     class property geoCoder:CLGeocoder := new CLGeocoder;
     property locationManager:CLLocationManager := new CLLocationManager;
-
-    method locationManager(manager: CLLocationManager) didVisit(visit: CLVisit);
-    begin
-
-      var location := new CLLocation withLatitude(visit.coordinate.latitude) longitude(visit.coordinate.longitude);
-
-      geoCoder.reverseGeocodeLocation(location)
-        begin
-          if (assigned(placemarks))then
-          begin
-            var place:CLPlacemark := placemarks.First;
-            var description := $'{place.name}';
-
-            receivedVisit(visit) WithDescription(description);
-
-          end;
-
-        end;
-
-    end;
-
 
     method receivedVisit(visit:CLVisit) WithDescription(description:String);
     begin
@@ -66,14 +47,27 @@ type
           ReceivedLocation(newLocation);
         end;
       end
-      else
-      begin
-        if(assigned(AdhocLocation))then
-        begin
-          AdhocLocation(newLocation);
-        end;
-      end;
 
+    end;
+
+
+    method locationManager(manager: CLLocationManager) didVisit(visit: CLVisit);
+    begin
+
+      var location := new CLLocation withLatitude(visit.coordinate.latitude) longitude(visit.coordinate.longitude);
+
+      geoCoder.reverseGeocodeLocation(location)
+        begin
+          if (assigned(placemarks))then
+          begin
+            var place:CLPlacemark := placemarks.First;
+            var description := $'{place.name}';
+
+            receivedVisit(visit) WithDescription(description);
+
+          end;
+
+        end;
 
     end;
 
@@ -84,6 +78,16 @@ type
 
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
+
+      if(assigned(AdhocPosition))then
+      begin
+        if(locations.Any) then
+        begin
+
+          var location := locations.First;
+          AdhocPosition(location.coordinate);
+        end;
+      end;
 
     end;
 
@@ -105,8 +109,8 @@ type
 
     // Called when a location has been added to a track
     property ReceivedLocation:ReceivedLocationDelegate;
-    // Called whenever there is no active track
-    property AdhocLocation:ReceivedLocationDelegate;
+
+    property AdhocPosition:ReceivedPositionDelegate;
 
 
     {$IFDEF MACOS}

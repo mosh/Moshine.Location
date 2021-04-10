@@ -172,7 +172,7 @@ type
 
     method stopTrack:String;
     begin
-      locationManager.startUpdatingLocation;
+      locationManager.stopUpdatingLocation;
       exit Storage.stopTrack;
     end;
 

@@ -19,6 +19,7 @@ type
   [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
   private
+    property lastLocation:CLLocationCoordinate2D;
 
     property Storage:IStorage;
 
@@ -50,7 +51,7 @@ type
 
     end;
 
-
+    /*
     method locationManager(manager: CLLocationManager) didVisit(visit: CLVisit);
     begin
 
@@ -70,6 +71,7 @@ type
         end;
 
     end;
+    */
 
     method locationManager(manager: CLLocationManager) didFailWithError(error: NSError);
     begin
@@ -79,6 +81,9 @@ type
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
 
+      lastLocation := locations.First.coordinate;
+
+      /*
       if(assigned(AdhocPosition))then
       begin
         if(locations.Any) then
@@ -88,6 +93,35 @@ type
           AdhocPosition(location.coordinate);
         end;
       end;
+      */
+
+      if(Tracking)then
+      begin
+
+        for each location in locations do
+        begin
+          var newLocation := new Location;
+
+          newLocation.Id := Guid.NewGuid.ToString;
+          newLocation.ArrivalDate := DateTime.UtcNow;
+          newLocation.DepartureDate := DateTime.UtcNow;
+          newLocation.Description := '';
+          newLocation.Latitude := location.coordinate.latitude;
+          newLocation.Longitude := location.coordinate.longitude;
+
+          if (addPosition(newLocation.Latitude, newLocation.Longitude))then
+          begin
+            if(assigned(ReceivedLocation))then
+            begin
+              ReceivedLocation(newLocation);
+            end;
+          end;
+        end;
+      end
+      else if assigned(AdhocPosition) then
+      begin
+        AdhocPosition(lastLocation);
+      end;
 
     end;
 
@@ -96,12 +130,12 @@ type
       workerQueue := new NSOperationQueue;
 
       locationManager.requestAlwaysAuthorization;
-      locationManager.startMonitoringVisits;
+      //locationManager.startMonitoringVisits;
       locationManager.delegate := self;
 
       locationManager.distanceFilter := 35; // 0
       locationManager.allowsBackgroundLocationUpdates := true; // 1
-      locationManager.startUpdatingLocation;  // 2
+      //locationManager.startUpdatingLocation;  // 2
 
     end;
 
@@ -129,11 +163,16 @@ type
 
     method startTrack:String;
     begin
+      if(not locationManager.locationServicesEnabled)then
+      begin
+        locationManager.startUpdatingLocation;
+      end;
       exit Storage.startTrack;
     end;
 
     method stopTrack:String;
     begin
+      locationManager.startUpdatingLocation;
       exit Storage.stopTrack;
     end;
 
@@ -253,8 +292,17 @@ type
     begin
 
       var status := self.locationManager.authorizationStatus;
-
-      self.locationManager.requestLocation;
+      if not locationManager.locationServicesEnabled then
+      begin
+        self.locationManager.requestLocation;
+      end
+      else
+      begin
+        if (assigned(lastLocation) and assigned(AdhocPosition)) then
+        begin
+          AdhocPosition(lastLocation);
+        end;
+      end;
     end;
 
 

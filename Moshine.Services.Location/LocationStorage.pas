@@ -53,8 +53,6 @@ type
     method startTrack:String;
     begin
       {$IFDEF TOFFEE}
-      var id := '';
-
       Realm.beginWriteTransaction;
 
       var track := ActiveTrack;

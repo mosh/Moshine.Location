@@ -19,7 +19,7 @@ type
   [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
   private
-    property lastLocation:CLLocationCoordinate2D;
+    property lastLocation:CLLocationCoordinate2D := kCLLocationCoordinate2DInvalid;
 
     property Storage:IStorage;
 
@@ -163,7 +163,7 @@ type
 
     method startTrack:String;
     begin
-      if(not locationManager.locationServicesEnabled)then
+      if(not CLLocationManager.locationServicesEnabled())then
       begin
         locationManager.startUpdatingLocation;
       end;
@@ -291,14 +291,16 @@ type
     method requestLocation;
     begin
 
-      var status := self.locationManager.authorizationStatus;
-      if not locationManager.locationServicesEnabled then
+      //var status := self.locationManager.authorizationStatus;
+
+      if (not CLLocationManager.locationServicesEnabled) then
       begin
         self.locationManager.requestLocation;
       end
       else
       begin
-        if (assigned(lastLocation) and assigned(AdhocPosition)) then
+
+        if (CLLocationCoordinate2DIsValid(lastLocation) and assigned(AdhocPosition)) then
         begin
           AdhocPosition(lastLocation);
         end;

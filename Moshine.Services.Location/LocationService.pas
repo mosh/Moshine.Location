@@ -163,16 +163,27 @@ type
 
     method startTrack:String;
     begin
+      if not LocationEnabled.Item1 then
+      begin
+        exit ''
+      end;
+
+      /*
       if(not CLLocationManager.locationServicesEnabled())then
       begin
         locationManager.startUpdatingLocation;
       end;
+      */
       exit Storage.startTrack;
     end;
 
     method stopTrack:String;
     begin
-      locationManager.stopUpdatingLocation;
+      //locationManager.stopUpdatingLocation;
+      if not Tracking then
+      begin
+        exit '';
+      end;
       exit Storage.stopTrack;
     end;
 
@@ -291,21 +302,46 @@ type
     method requestLocation;
     begin
 
-      //var status := self.locationManager.authorizationStatus;
+      /*
 
-      if (not CLLocationManager.locationServicesEnabled) then
+      if (not LocationEnabled.Item1) then
       begin
         self.locationManager.requestLocation;
       end
       else
       begin
-
         if (CLLocationCoordinate2DIsValid(lastLocation) and assigned(AdhocPosition)) then
         begin
           AdhocPosition(lastLocation);
         end;
       end;
+      */
     end;
+
+    method LocationEnabled:tuple of (Boolean,String);
+    begin
+      if CLLocationManager.locationServicesEnabled then
+      begin
+        var status := CoreLocation.CLLocationManager.authorizationStatus;
+        case status of
+          CLAuthorizationStatus.AuthorizedAlways,
+          CLAuthorizationStatus.AuthorizedWhenInUse:
+          begin
+            exit (true, 'Access');
+          end;
+          CLAuthorizationStatus.Denied,
+          CLAuthorizationStatus.Restricted:
+          begin
+            exit (false, 'No Access');
+          end;
+        end;
+      end
+      else
+      begin
+        exit (false,'Turn On Location Services to Allow App to Determine Your Location');
+      end;
+    end;
+
 
 
 

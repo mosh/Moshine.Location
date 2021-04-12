@@ -133,9 +133,9 @@ type
       //locationManager.startMonitoringVisits;
       locationManager.delegate := self;
 
-      locationManager.distanceFilter := 35; // 0
-      locationManager.allowsBackgroundLocationUpdates := true; // 1
-      //locationManager.startUpdatingLocation;  // 2
+      locationManager.distanceFilter := kCLDistanceFilterNone; // default
+      locationManager.allowsBackgroundLocationUpdates := true;
+      //locationManager.startUpdatingLocation;
 
     end;
 

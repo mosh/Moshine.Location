@@ -73,6 +73,11 @@ type
     end;
     */
 
+    method locationManager(manager: CLLocationManager) didChangeAuthorizationStatus(status: CLAuthorizationStatus);
+    begin
+
+    end;
+
     method locationManager(manager: CLLocationManager) didFailWithError(error: NSError);
     begin
 
@@ -292,6 +297,13 @@ type
     method didVisitLocation(visit:CLVisit);
     begin
       //locationManager(self.locationManager) didVisit(visit);
+    end;
+
+    method didUpdateLocations(location:CLLocation);
+    begin
+      var locations := new NSMutableArray<CLLocation>;
+      locations.addObject(location);
+      locationManager(self.locationManager) didUpdateLocations(locations);
     end;
 
     method removeAllLocal;

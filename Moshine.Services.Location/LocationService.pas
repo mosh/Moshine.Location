@@ -291,7 +291,7 @@ type
 
     method didVisitLocation(visit:CLVisit);
     begin
-      locationManager(self.locationManager) didVisit(visit);
+      //locationManager(self.locationManager) didVisit(visit);
     end;
 
     method removeAllLocal;

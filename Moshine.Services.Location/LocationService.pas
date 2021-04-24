@@ -75,6 +75,10 @@ type
 
     method locationManager(manager: CLLocationManager) didChangeAuthorizationStatus(status: CLAuthorizationStatus);
     begin
+      if (status = CLAuthorizationStatus.Authorized) then
+      begin
+        manager.startUpdatingLocation;
+      end;
 
     end;
 

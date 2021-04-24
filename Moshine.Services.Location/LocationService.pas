@@ -45,6 +45,17 @@ type
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
 
+      if CLLocationCoordinate2DIsValid(lastLocation) then
+      begin
+        var currentLocation := locations.First.coordinate;
+
+        var distance := lastLocation.GreatCircleDistance(currentLocation);
+        if(distance <= 2)then
+        begin
+          exit;
+        end;
+      end;
+
       lastLocation := locations.First.coordinate;
 
       if(Tracking)then
@@ -247,21 +258,10 @@ type
 
     method requestLocation;
     begin
-
-      /*
-
-      if (not LocationEnabled.Item1) then
+      if (CLLocationCoordinate2DIsValid(lastLocation) and assigned(AdhocPosition)) then
       begin
-        self.locationManager.requestLocation;
-      end
-      else
-      begin
-        if (CLLocationCoordinate2DIsValid(lastLocation) and assigned(AdhocPosition)) then
-        begin
-          AdhocPosition(lastLocation);
-        end;
+        AdhocPosition(lastLocation);
       end;
-      */
     end;
 
     method LocationEnabled:tuple of (Boolean,String);

@@ -28,51 +28,6 @@ type
     class property geoCoder:CLGeocoder := new CLGeocoder;
     property locationManager:CLLocationManager := new CLLocationManager;
 
-    method receivedVisit(visit:CLVisit) WithDescription(description:String);
-    begin
-
-      var newLocation := new Location;
-
-      newLocation.Id := Guid.NewGuid.ToString;
-      newLocation.ArrivalDate := visit.arrivalDate;
-      newLocation.DepartureDate := visit.departureDate;
-      newLocation.Description := description;
-      newLocation.Latitude := visit.coordinate.latitude;
-      newLocation.Longitude := visit.coordinate.longitude;
-
-
-      if (addPosition(newLocation.Latitude, newLocation.Longitude))then
-      begin
-        if(assigned(ReceivedLocation))then
-        begin
-          ReceivedLocation(newLocation);
-        end;
-      end
-
-    end;
-
-    /*
-    method locationManager(manager: CLLocationManager) didVisit(visit: CLVisit);
-    begin
-
-      var location := new CLLocation withLatitude(visit.coordinate.latitude) longitude(visit.coordinate.longitude);
-
-      geoCoder.reverseGeocodeLocation(location)
-        begin
-          if (assigned(placemarks))then
-          begin
-            var place:CLPlacemark := placemarks.First;
-            var description := $'{place.name}';
-
-            receivedVisit(visit) WithDescription(description);
-
-          end;
-
-        end;
-
-    end;
-    */
-
     method locationManager(manager: CLLocationManager) didChangeAuthorizationStatus(status: CLAuthorizationStatus);
     begin
       if (status = CLAuthorizationStatus.Authorized) then
@@ -91,18 +46,6 @@ type
     begin
 
       lastLocation := locations.First.coordinate;
-
-      /*
-      if(assigned(AdhocPosition))then
-      begin
-        if(locations.Any) then
-        begin
-
-          var location := locations.First;
-          AdhocPosition(location.coordinate);
-        end;
-      end;
-      */
 
       if(Tracking)then
       begin
@@ -139,7 +82,6 @@ type
       workerQueue := new NSOperationQueue;
 
       locationManager.requestAlwaysAuthorization;
-      //locationManager.startMonitoringVisits;
       locationManager.delegate := self;
 
       locationManager.distanceFilter := kCLDistanceFilterNone; // default
@@ -177,18 +119,11 @@ type
         exit ''
       end;
 
-      /*
-      if(not CLLocationManager.locationServicesEnabled())then
-      begin
-        locationManager.startUpdatingLocation;
-      end;
-      */
       exit Storage.startTrack;
     end;
 
     method stopTrack:String;
     begin
-      //locationManager.stopUpdatingLocation;
       if not Tracking then
       begin
         exit '';
@@ -297,11 +232,6 @@ type
 
     end;
 
-
-    method didVisitLocation(visit:CLVisit);
-    begin
-      //locationManager(self.locationManager) didVisit(visit);
-    end;
 
     method didUpdateLocations(location:CLLocation);
     begin

@@ -45,6 +45,7 @@ type
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
 
+      {$IFDEF TOFFEE}
       if CLLocationCoordinate2DIsValid(lastLocation) then
       begin
         var currentLocation := locations.First.coordinate;
@@ -55,6 +56,7 @@ type
           exit;
         end;
       end;
+      {$ENDIF}
 
       lastLocation := locations.First.coordinate;
 
@@ -268,7 +270,7 @@ type
     begin
       if CLLocationManager.locationServicesEnabled then
       begin
-        var status := CoreLocation.CLLocationManager.authorizationStatus;
+        var status := locationManager.authorizationStatus;
         case status of
           CLAuthorizationStatus.AuthorizedAlways,
           CLAuthorizationStatus.AuthorizedWhenInUse:

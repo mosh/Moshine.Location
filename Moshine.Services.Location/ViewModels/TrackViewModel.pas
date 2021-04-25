@@ -11,6 +11,7 @@ type
     property Start:DateTime;
     property Stopped:DateTime;
     property Distance:Double;
+    property Locations:Integer;
   end;
 
 end.

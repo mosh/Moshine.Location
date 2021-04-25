@@ -28,13 +28,29 @@ type
     class property geoCoder:CLGeocoder := new CLGeocoder;
     property locationManager:CLLocationManager := new CLLocationManager;
 
+    method CoveredDistance:Boolean;
+    begin
+      {$IFDEF TOFFEE}
+      if CLLocationCoordinate2DIsValid(lastLocation) then
+      begin
+        var currentLocation := locations.First.coordinate;
+
+        var distance := lastLocation.GreatCircleDistance(currentLocation);
+        if(distance <= 2)then
+        begin
+          exit false;
+        end;
+      end;
+      {$ENDIF}
+      exit true;
+    end;
+
     method locationManager(manager: CLLocationManager) didChangeAuthorizationStatus(status: CLAuthorizationStatus);
     begin
       if (status = CLAuthorizationStatus.Authorized) then
       begin
         manager.startUpdatingLocation;
       end;
-
     end;
 
     method locationManager(manager: CLLocationManager) didFailWithError(error: NSError);
@@ -45,18 +61,10 @@ type
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
 
-      {$IFDEF TOFFEE}
-      if CLLocationCoordinate2DIsValid(lastLocation) then
+      if(not CoveredDistance)then
       begin
-        var currentLocation := locations.First.coordinate;
-
-        var distance := lastLocation.GreatCircleDistance(currentLocation);
-        if(distance <= 2)then
-        begin
-          exit;
-        end;
+        exit;
       end;
-      {$ENDIF}
 
       lastLocation := locations.First.coordinate;
 
@@ -157,7 +165,7 @@ type
         end;
 
 
-    method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double);
+    method trackInformation(trackId:String): tuple of (Start:DateTime, Stopped:DateTime, Distance:Double, Count:Integer);
     begin
       var allTrackLocations := Storage.positions(trackId).ToList;
 
@@ -179,12 +187,12 @@ type
 
         end;
 
-        exit (start, stopped, distance);
+        exit (start, stopped, distance, allTrackLocations.Count);
 
 
       end;
 
-      exit (nil, nil, 0);
+      exit (nil, nil, 0,0);
 
     end;
 
@@ -226,6 +234,7 @@ type
 
               model.Stopped := information.Stopped;
               model.Distance := information.Distance;
+              model.Locations := information.Count;
 
               NSOperationQueue.mainQueue.addOperationWithBlock
                 begin

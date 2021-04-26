@@ -1,6 +1,9 @@
 ﻿namespace Moshine.Api.Location;
 
 uses
+  {$IFDEF TOFFEE}
+  CoreLocation,
+  {$ENDIF}
   Moshine.Api.Location.Models,
   RemObjects.Elements.RTL;
 
@@ -129,6 +132,14 @@ type
       exit r * 2 * RemObjects.Elements.RTL.Math.Asin(RemObjects.Elements.RTL.Math.Sqrt(a));
 
     end;
+
+    {$IFDEF TOFFEE}
+    property Valid:Boolean read
+      begin
+        exit CLLocationCoordinate2DIsValid(self);
+      end;
+    {$ENDIF}
+
 
 
 

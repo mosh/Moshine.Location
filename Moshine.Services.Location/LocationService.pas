@@ -19,7 +19,8 @@ type
   [Cocoa]
   LocationService = public class(ICLLocationManagerDelegate)
   private
-    property lastLocation:CLLocationCoordinate2D := kCLLocationCoordinate2DInvalid;
+
+    property Last:LastLocation := new LastLocation;
 
     property Storage:IStorage;
 
@@ -31,11 +32,11 @@ type
     method CoveredDistance(locations: NSArray<CLLocation>):Boolean;
     begin
       {$IFDEF TOFFEE}
-      if CLLocationCoordinate2DIsValid(lastLocation) then
+      if Last.Coordinate.Valid then
       begin
         var currentLocation := locations.First.coordinate;
 
-        var distance := lastLocation.GreatCircleDistance(currentLocation);
+        var distance := Last.Coordinate.GreatCircleDistance(currentLocation);
         if(distance <= 2)then
         begin
           exit false;
@@ -66,7 +67,7 @@ type
         exit;
       end;
 
-      lastLocation := locations.First.coordinate;
+      Last.Coordinate := locations.First.coordinate;
 
       if(Tracking)then
       begin
@@ -93,7 +94,7 @@ type
       end
       else if assigned(AdhocPosition) then
       begin
-        AdhocPosition(lastLocation);
+        AdhocPosition(Last.Coordinate);
       end;
 
     end;
@@ -269,9 +270,9 @@ type
 
     method requestLocation;
     begin
-      if (CLLocationCoordinate2DIsValid(lastLocation) and assigned(AdhocPosition)) then
+      if (CLLocationCoordinate2DIsValid(Last.Coordinate) and assigned(AdhocPosition)) then
       begin
-        AdhocPosition(lastLocation);
+        AdhocPosition(Last.Coordinate);
       end;
     end;
 

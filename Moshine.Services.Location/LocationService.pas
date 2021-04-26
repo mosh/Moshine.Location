@@ -28,7 +28,7 @@ type
     class property geoCoder:CLGeocoder := new CLGeocoder;
     property locationManager:CLLocationManager := new CLLocationManager;
 
-    method CoveredDistance:Boolean;
+    method CoveredDistance(locations: NSArray<CLLocation>):Boolean;
     begin
       {$IFDEF TOFFEE}
       if CLLocationCoordinate2DIsValid(lastLocation) then
@@ -61,7 +61,7 @@ type
     method locationManager(manager: CLLocationManager) didUpdateLocations(locations: NSArray<CLLocation>);
     begin
 
-      if(not CoveredDistance)then
+      if(not CoveredDistance(locations))then
       begin
         exit;
       end;

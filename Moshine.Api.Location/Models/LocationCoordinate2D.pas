@@ -5,7 +5,7 @@ type
   LineOfLatitude = public type Double;
   LineOfLongitude = public type Double;
 
-  {$IF TOFFEE}
+  {$IF TOFFEE OR DARWIN}
   PlatformLocationCoordinate2D = public CoreLocation.CLLocationCoordinate2D;
   {$ELSE}
   PlatformLocationCoordinate2D = public class
@@ -23,7 +23,7 @@ type
       read mapped.latitude as LineOfLatitude
       write
       begin
-        {$IF TOFFEE}
+        {$IF TOFFEE OR DARWIN}
         mapped.latitude := Double(value);
         {$ELSE}
         mapped.latitude := value;
@@ -35,7 +35,7 @@ type
       read mapped.longitude as LineOfLongitude
       write
       begin
-        {$IF TOFFEE}
+        {$IF TOFFEE OR DARWIN}
         mapped.longitude := Double(value);
         {$ELSE}
         mapped.longitude := value;
@@ -43,7 +43,7 @@ type
 
       end;
 
-    {$IF TOFFEE}
+    {$IF TOFFEE OR DARWIN}
     constructor;
     begin
       self := CoreLocation.CLLocationCoordinate2DMake(0, 0);
@@ -55,7 +55,7 @@ type
     constructor(latitudeValue:LineOfLatitude;longitudeValue:LineOfLongitude);
     begin
 
-      {$IF TOFFEE}
+      {$IF TOFFEE OR DARWIN}
       self := CoreLocation.CLLocationCoordinate2DMake(latitudeValue as Double, longitudeValue as Double);
       {$ELSE}
       self := new LocationCoordinate2D;

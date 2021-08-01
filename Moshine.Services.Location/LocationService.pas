@@ -31,7 +31,7 @@ type
 
     method CoveredDistance(locations: NSArray<CLLocation>):Boolean;
     begin
-      {$IFDEF TOFFEE}
+
       if Last.Coordinate.Valid then
       begin
         var currentLocation := locations.First.coordinate;
@@ -42,7 +42,7 @@ type
           exit false;
         end;
       end;
-      {$ENDIF}
+
       exit true;
     end;
 

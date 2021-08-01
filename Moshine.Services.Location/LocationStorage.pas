@@ -52,7 +52,6 @@ type
 
     method startTrack:String;
     begin
-      {$IFDEF TOFFEE}
       Realm.beginWriteTransaction;
 
       var track := ActiveTrack;
@@ -71,18 +70,10 @@ type
       Realm.addOrUpdateObject(newTrack);
       Realm.commitWriteTransaction;
       exit newTrack.Id;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
-
-
-
     end;
 
     method stopTrack:String;
     begin
-      {$IFDEF TOFFEE}
-
       var id := '';
 
       Realm.beginWriteTransaction;
@@ -99,36 +90,24 @@ type
 
       Realm.commitWriteTransaction;
       exit id;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
     property ActiveTrack:Track
       read
         begin
-          {$IFDEF TOFFEE}
           var conditionBlock := method(item:Track):Boolean begin exit item.Active; end;
-          exit Track.allObjectsInRealm(Realm).FirstOrDefault(t -> conditionBlock(t));
-          {$ELSE}
-          raise new NotImplementedException;
-          {$ENDIF}
+          exit Track.allObjectsInRealm(Realm).Cast<Track>.FirstOrDefault(t -> conditionBlock(t));
         end;
 
     method trackStats:tuple of (Boolean, Integer);
     begin
-      {$IFDEF TOFFEE}
       var count := Track.allObjectsInRealm(Realm).count;
       var track := ActiveTrack;
       exit (assigned(track), count);
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
     method addPosition(latitude:Double; longitude:Double):Boolean;
     begin
-      {$IFDEF TOFFEE}
       var added := false;
 
       Realm.beginWriteTransaction;
@@ -151,48 +130,34 @@ type
       Realm.commitWriteTransaction;
 
       exit added;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
 
     method positions(trackId:String):sequence of PositionViewModel;
     begin
-      {$IFDEF TOFFEE}
       exit Position.allObjectsInRealm(Realm)
+        .Cast<Position>
         .Where(p -> p.TrackId = trackId)
         .OrderBy(p -> p.Now)
         .Select(p -> new PositionViewModel( Now := p.Now, Location := new LocationCoordinate2D(p.Latitude, p.Longitude))).ToList;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
     method removeAllLocal;
     begin
-      {$IFDEF TOFFEE}
       Realm.beginWriteTransaction;
       Realm.deleteObjects(Position.allObjectsInRealm(Realm));
       Realm.deleteObjects(Track.allObjectsInRealm(Realm));
       Realm.commitWriteTransaction;
-      {$ELSE}
-      raise new NotImplementedException;
-      {$ENDIF}
     end;
 
     method tracks:sequence of TrackViewModel;
     begin
-      {$IFDEF TOFFEE}
       var allTracks := Track.allObjectsInRealm(Realm);
       var sortedTracks := allTracks
+        .Cast<Track>
         .OrderByDescending(t -> t.StartDate)
         .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
       exit sortedTracks;
-      {$ELSE}
-      exit nil;
-      {$ENDIF}
-
     end;
 
   end;

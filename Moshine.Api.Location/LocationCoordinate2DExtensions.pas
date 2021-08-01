@@ -1,7 +1,7 @@
 ﻿namespace Moshine.Api.Location;
 
 uses
-  {$IFDEF TOFFEE}
+  {$IFDEF TOFFEE OR DARWIN}
   CoreLocation,
   {$ENDIF}
   Moshine.Api.Location.Models,
@@ -133,13 +133,12 @@ type
 
     end;
 
-    {$IFDEF TOFFEE}
+    {$IF TOFFEE OR DARWIN}
     property Valid:Boolean read
       begin
         exit CLLocationCoordinate2DIsValid(self);
       end;
     {$ENDIF}
-
 
 
 

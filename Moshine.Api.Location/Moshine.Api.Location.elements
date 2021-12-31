@@ -42,12 +42,17 @@
     <Mode>Island</Mode>
     <SubMode>Darwin</SubMode>
     <SDK>macOS</SDK>
+    <GenerateBitcode>True</GenerateBitcode>
+    <Architecture>all</Architecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.iOS' ">
     <Mode>Island</Mode>
     <SubMode>Darwin</SubMode>
     <SDK>iOS</SDK>
     <SupportMacCatalyst>False</SupportMacCatalyst>
+    <GenerateBitcode>True</GenerateBitcode>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.tvOS' ">
     <Mode>Island</Mode>
@@ -58,6 +63,9 @@
     <Mode>Island</Mode>
     <SubMode>Darwin</SubMode>
     <SDK>watchOS</SDK>
+    <GenerateBitcode>True</GenerateBitcode>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Island.WebAssembly' ">
     <Mode>Island</Mode>
@@ -68,6 +76,9 @@
     <SDK>iOS</SDK>
     <SupportMacCatalyst>False</SupportMacCatalyst>
     <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+    <GenerateBitcode>True</GenerateBitcode>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Toffee.macOS' ">
     <Mode>Toffee</Mode>
@@ -83,6 +94,9 @@
     <Mode>Toffee</Mode>
     <SDK>watchOS</SDK>
     <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+    <GenerateBitcode>True</GenerateBitcode>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="#" />

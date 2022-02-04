@@ -45,8 +45,8 @@ type
             begin
               var newPoint := new GPXPoint;
 
-              var lat := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lat').Value) as LineOfLatitude;
-              var lon := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lon').Value) as LineOfLongitude;
+              var lat := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lat').Value);
+              var lon := Convert.ToDouble(element.Attributes.First(a -> a.LocalName = 'lon').Value);
 
               newPoint.Coordinate := new Moshine.Api.Location.Models.LocationCoordinate2D(lat, lon);
 

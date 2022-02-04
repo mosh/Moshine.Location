@@ -37,7 +37,7 @@ type
     begin
       {$IFDEF ECHOES}
       exit System.Math.PI * degrees / 180.0;
-      {$ELSEIF TOFFEE}
+      {$ELSEIF TOFFEE OR DARWIN}
       exit M_PI * degrees / 180.0;
       {$ELSE}
       raise new NotImplementedException;
@@ -49,7 +49,7 @@ type
     begin
       {$IFDEF ECHOES}
       exit 180.0 * radians / System.Math.PI;
-      {$ELSEIF TOFFEE}
+      {$ELSEIF TOFFEE OR DARWIN}
       exit 180.0 * radians / M_PI;
       {$ELSE}
       raise new NotImplementedException;
@@ -89,8 +89,8 @@ type
       var lonMin := lon - halfSide / pradius;
       var lonMax := lon + halfSide / pradius;
 
-      var minPoint := new LocationCoordinate2D (Radians2Degrees(latMin) as LineOfLatitude, Radians2Degrees(lonMin) as LineOfLongitude);
-      var maxPoint := new LocationCoordinate2D (Radians2Degrees(latMax) as LineOfLatitude, Radians2Degrees(lonMax) as LineOfLongitude);
+      var minPoint := new LocationCoordinate2D (Radians2Degrees(latMin), Radians2Degrees(lonMin));
+      var maxPoint := new LocationCoordinate2D (Radians2Degrees(latMax), Radians2Degrees(lonMax));
 
       exit new BoundingBox (minPoint, maxPoint);
     end;

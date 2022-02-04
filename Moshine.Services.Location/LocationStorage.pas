@@ -139,7 +139,11 @@ type
         .Cast<Position>
         .Where(p -> p.TrackId = trackId)
         .OrderBy(p -> p.Now)
-        .Select(p -> new PositionViewModel( Now := p.Now, Location := new LocationCoordinate2D(p.Latitude, p.Longitude))).ToList;
+        .Select(p -> new PositionViewModel(
+          Now := p.Now,
+          Location := new LocationCoordinate2D(Double(p.Latitude), Double(p.Longitude))
+          )
+          ).ToList;
     end;
 
     method removeAllLocal;

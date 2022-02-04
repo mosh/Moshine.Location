@@ -5,24 +5,6 @@ type
   LineOfLatitude = public type Double;
   LineOfLongitude = public type Double;
 
-  LineOfLatitideExtensions = public extension class(LineOfLatitude)
-  public
-    operator Implicit(value: Double): LineOfLatitude;
-    begin
-      exit value as LineOfLatitude;
-    end;
-
-  end;
-
-  LineOfLongitudeExtensions = public extension class(LineOfLongitude)
-  public
-    operator Implicit(value: Double): LineOfLongitude;
-    begin
-      exit value as LineOfLongitude;
-    end;
-
-  end;
-
 
   {$IF TOFFEE OR DARWIN}
   PlatformLocationCoordinate2D = public CoreLocation.CLLocationCoordinate2D;
@@ -71,19 +53,18 @@ type
     constructor; mapped to constructor;
     {$ENDIF}
 
-    constructor(latitudeValue:LineOfLatitude;longitudeValue:LineOfLongitude);
+    constructor(latitudeValue:Double;longitudeValue:Double);
     begin
 
       {$IF TOFFEE OR DARWIN}
       self := CoreLocation.CLLocationCoordinate2DMake(latitudeValue as Double, longitudeValue as Double);
       {$ELSE}
-      self := new LocationCoordinate2D;
-      self.latitude := latitudeValue ;
-      self.longitude := longitudeValue;
+      mapped constructor;
+      self.latitude := LineOfLatitude(latitudeValue);
+      self.longitude := LineOfLongitude(longitudeValue);
       {$ENDIF}
 
     end;
-
 
   end;
 

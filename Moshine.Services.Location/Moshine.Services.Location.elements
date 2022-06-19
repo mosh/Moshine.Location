@@ -45,7 +45,7 @@
     <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
       <Private>True</Private>
     </RemoteProjectReference>
-    <ProjectReference Include="Moshine.Api.Location">
+    <ProjectReference Include="..\Moshine.Api.Location\Moshine.Api.Location.elements">
       <HintPath>..\Moshine.Api.Location\Bin\Debug\iOS\arm64\Moshine.Api.Location.a</HintPath>
       <Project>{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}</Project>
       <ProjectFile>..\Moshine.Api.Location\Moshine.Api.Location.elements</ProjectFile>
@@ -62,6 +62,7 @@
     <Compile Include="LocationStorage.pas" />
     <Compile Include="Interfaces\IStorage.pas" />
     <Compile Include="Models\LastLocation.pas" />
+    <Compile Include="NotifyingLocationService.pas" />
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.iOS'">
     <Reference Include="Elements">

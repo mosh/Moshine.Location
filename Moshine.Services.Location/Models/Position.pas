@@ -1,11 +1,13 @@
 ﻿namespace Moshine.Services.Location.Models;
 
+{$IFNDEF WATCHOS}
 
 uses
   Realm,
   RemObjects.Elements.RTL;
 
 type
+
   Position = public class(RLMObject)
   private
   protected
@@ -22,6 +24,8 @@ type
     end;
 
   end;
+
+{$ENDIF}
 
 
 end.

@@ -22,29 +22,35 @@
     <SubMode>Darwin</SubMode>
     <SDK>iOS</SDK>
     <SupportMacCatalyst>False</SupportMacCatalyst>
-  </PropertyGroup>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
+ </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Island.Darwin.watchOS' ">
     <Mode>Island</Mode>
     <SubMode>Darwin</SubMode>
     <SDK>watchOS</SDK>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Toffee.iOS' ">
     <Mode>Toffee</Mode>
     <SDK>iOS</SDK>
     <SupportMacCatalyst>False</SupportMacCatalyst>
     <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Target)' == 'Toffee.watchOS' ">
     <Mode>Toffee</Mode>
     <SDK>watchOS</SDK>
     <DefaultUses>Foundation;RemObjects.Elements.Linq</DefaultUses>
-  </PropertyGroup>
+    <Architecture>all</Architecture>
+    <SimulatorArchitecture>all</SimulatorArchitecture>
+    <GenerateBitcode>True</GenerateBitcode>
+</PropertyGroup>
   <ItemGroup>
     <Reference Include="#" />
     <Reference Include="CoreLocation" />
-    <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
-      <Private>True</Private>
-    </RemoteProjectReference>
     <ProjectReference Include="..\Moshine.Api.Location\Moshine.Api.Location.elements">
       <HintPath>..\Moshine.Api.Location\Bin\Debug\iOS\arm64\Moshine.Api.Location.a</HintPath>
       <Project>{F60F0C65-2EFD-4D72-B378-72C746FBDBDD}</Project>
@@ -68,26 +74,38 @@
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
-  </ItemGroup>
+     <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+      <Private>True</Private>
+    </RemoteProjectReference>
+ </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.macOS'">
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
-  </ItemGroup>
+      <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+      <Private>True</Private>
+    </RemoteProjectReference>
+ </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Island.Darwin.watchOS'">
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
-  </ItemGroup>
+ </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Toffee.iOS'">
     <Reference Include="libElements">
       <Private>True</Private>
     </Reference>
+     <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+      <Private>True</Private>
+    </RemoteProjectReference>
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Toffee.macOS'">
     <Reference Include="libElements">
       <Private>True</Private>
     </Reference>
+     <RemoteProjectReference Include="github.com/mosh/ImportSolution/Realm.elements:*">
+      <Private>True</Private>
+    </RemoteProjectReference>
   </ItemGroup>
   <ItemGroup Condition="'$(Target)' == 'Toffee.watchOS'">
     <Reference Include="libElements">

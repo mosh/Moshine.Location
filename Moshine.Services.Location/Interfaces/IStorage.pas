@@ -12,7 +12,9 @@ type
     method trackStats:tuple of (Boolean, Integer);
     method addPosition(latitude:Double; longitude:Double):Boolean;
 
+{$IFNDEF WATCHOS}
     property ActiveTrack:Track read;
+{$ENDIF}
 
     method tracks:sequence of TrackViewModel;
 

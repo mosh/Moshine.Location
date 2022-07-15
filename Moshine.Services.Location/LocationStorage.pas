@@ -5,19 +5,21 @@ uses
   Moshine.Services.Location.Interfaces,
   Moshine.Services.Location.Models,
   Moshine.Services.Location.ViewModels,
+{$IFNDEF WATCHOS}
   Realm,
+{$ENDIF}
   RemObjects.Elements.RTL;
 
 type
 
-  LocationStorage = public class(IStorage)
+  LocationStorage = public class({$IFNDEF WATCHOS}IStorage{$ENDIF})
   private
-    {$IFDEF MACOS}
+{$IFDEF MACOS}
     property RealmUrl:NSURL;
     property RealmForUrl:RLMRealm;
-    {$ENDIF}
+{$ENDIF}
 
-
+{$IFNDEF WATCHOS}
     property Realm:RLMRealm
       read
         begin
@@ -36,6 +38,7 @@ type
           exit RLMRealm.defaultRealm;
           {$ENDIF}
         end;
+{$ENDIF}
 
   public
 
@@ -50,6 +53,7 @@ type
     end;
     {$ENDIF}
 
+{$IFNDEF WATCHOS}
     method startTrack:String;
     begin
       Realm.beginWriteTransaction;
@@ -71,7 +75,9 @@ type
       Realm.commitWriteTransaction;
       exit newTrack.Id;
     end;
+  {$ENDIF}
 
+{$IFNDEF WATCHOS}
     method stopTrack:String;
     begin
       var id := '';
@@ -91,7 +97,9 @@ type
       Realm.commitWriteTransaction;
       exit id;
     end;
+  {$ENDIF}
 
+{$IFNDEF WATCHOS}
     property ActiveTrack:Track
       read
         begin
@@ -163,6 +171,7 @@ type
         .Select(t -> new TrackViewModel(Id := t.Id, Start := t.StartDate)).ToList;
       exit sortedTracks;
     end;
+{$ENDIF}
 
   end;
 

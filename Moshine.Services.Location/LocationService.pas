@@ -69,9 +69,10 @@ type
 
       Last.Coordinate := locations.First.coordinate;
 
+{$IFNDEF WATCHOS}
+
       if(Tracking)then
       begin
-
         for each location in locations do
         begin
           var newLocation := new Location;
@@ -96,6 +97,7 @@ type
       begin
         AdhocPosition(Last.Coordinate);
       end;
+{$ENDIF}
 
     end;
 
@@ -129,11 +131,14 @@ type
     {$ELSE}
     constructor;
     begin
+{$IFNDEF WATCHOS}
       Storage := new LocationStorage;
       initialize;
+{$ENDIF}
     end;
     {$ENDIF}
 
+{$IFNDEF WATCHOS}
     method startTrack:String;
     begin
       if not LocationEnabled.Item1 then
@@ -254,7 +259,7 @@ type
       exit sortedTracks;
 
     end;
-
+{$ENDIF}
 
     method didUpdateLocations(location:CLLocation);
     begin
@@ -299,9 +304,6 @@ type
         exit (false,'Turn On Location Services to Allow App to Determine Your Location');
       end;
     end;
-
-
-
 
   end;
 

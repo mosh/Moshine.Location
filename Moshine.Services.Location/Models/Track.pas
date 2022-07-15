@@ -1,5 +1,8 @@
 ﻿namespace Moshine.Services.Location.Models;
 
+
+{$IFNDEF WATCHOS}
+
 uses
   Realm,
   RemObjects.Elements.RTL;
@@ -19,5 +22,7 @@ type
     end;
 
   end;
+
+{$ENDIF}
 
 end.
